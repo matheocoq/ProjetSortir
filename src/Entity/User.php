@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +40,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 10)]
     private ?string $telephone = null;
+
+    #[ORM\Column(options: ["default" => false ])]
+    private ?bool $administrateur = false;
+
+    #[ORM\Column(options: ["default" => true])]
+    private ?bool $actif = true;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?sites $sites = null;
+
+    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sorties::class)]
+    private Collection $organisations;
+
+    #[ORM\OneToMany(mappedBy: 'participant', targetEntity: Inscriptions::class)]
+    private Collection $inscriptions;
+
+    public function __construct()
+    {
+        $this->organisations = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,6 +177,102 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function isAdministrateur(): ?bool
+    {
+        return $this->administrateur;
+    }
+
+    public function setAdministrateur(bool $administrateur): self
+    {
+        $this->administrateur = $administrateur;
+
+        return $this;
+    }
+
+    public function isActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): self
+    {
+        $this->actif = $actif;
+
+        return $this;
+    }
+
+    public function getSites(): ?sites
+    {
+        return $this->sites;
+    }
+
+    public function setSites(?sites $sites): self
+    {
+        $this->sites = $sites;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sorties>
+     */
+    public function getOrganisations(): Collection
+    {
+        return $this->organisations;
+    }
+
+    public function addOrganisation(Sorties $organisation): self
+    {
+        if (!$this->organisations->contains($organisation)) {
+            $this->organisations->add($organisation);
+            $organisation->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisation(Sorties $organisation): self
+    {
+        if ($this->organisations->removeElement($organisation)) {
+            // set the owning side to null (unless already changed)
+            if ($organisation->getOrganisateur() === $this) {
+                $organisation->setOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inscriptions>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscriptions $inscription): self
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscriptions $inscription): self
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getParticipant() === $this) {
+                $inscription->setParticipant(null);
+            }
+        }
 
         return $this;
     }
