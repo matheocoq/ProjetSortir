@@ -29,7 +29,7 @@ class Lieux
 
     #[ORM\ManyToOne(inversedBy: 'lieuxs')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?ville $ville = null;
+    private ?Ville $ville = null;
 
     #[ORM\OneToMany(mappedBy: 'lieux', targetEntity: Sorties::class)]
     private Collection $sorties;
@@ -92,12 +92,12 @@ class Lieux
         return $this;
     }
 
-    public function getVille(): ?ville
+    public function getVille(): ?Ville
     {
         return $this->ville;
     }
 
-    public function setVille(?ville $ville): self
+    public function setVille(?Ville $ville): self
     {
         $this->ville = $ville;
 

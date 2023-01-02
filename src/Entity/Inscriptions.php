@@ -19,11 +19,11 @@ class Inscriptions
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?sorties $sorties = null;
+    private ?Sorties $sorties = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $participant = null;
+    private ?User $participant = null;
 
     public function getId(): ?int
     {
@@ -42,24 +42,24 @@ class Inscriptions
         return $this;
     }
 
-    public function getSorties(): ?sorties
+    public function getSorties(): ?Sorties
     {
         return $this->sorties;
     }
 
-    public function setSorties(?sorties $sorties): self
+    public function setSorties(?Sorties $sorties): self
     {
         $this->sorties = $sorties;
 
         return $this;
     }
 
-    public function getParticipant(): ?user
+    public function getParticipant(): ?User
     {
         return $this->participant;
     }
 
-    public function setParticipant(?user $participant): self
+    public function setParticipant(?User $participant): self
     {
         $this->participant = $participant;
 

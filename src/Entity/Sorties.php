@@ -43,11 +43,11 @@ class Sorties
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?lieux $lieux = null;
+    private ?Lieux $lieux = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?etats $etat = null;
+    private ?Etats $etat = null;
 
     #[ORM\OneToMany(mappedBy: 'sorties', targetEntity: Inscriptions::class)]
     private Collection $inscriptions;
@@ -158,24 +158,24 @@ class Sorties
         return $this;
     }
 
-    public function getLieux(): ?lieux
+    public function getLieux(): ?Lieux
     {
         return $this->lieux;
     }
 
-    public function setLieux(?lieux $lieux): self
+    public function setLieux(?Lieux $lieux): self
     {
         $this->lieux = $lieux;
 
         return $this;
     }
 
-    public function getEtat(): ?etats
+    public function getEtat(): ?Etats
     {
         return $this->etat;
     }
 
-    public function setEtat(?etats $etat): self
+    public function setEtat(?Etats $etat): self
     {
         $this->etat = $etat;
 
