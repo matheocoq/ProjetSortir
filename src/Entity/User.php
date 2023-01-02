@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?sites $sites = null;
+    private ?Sites $sites = null;
 
     #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sorties::class)]
     private Collection $organisations;
@@ -205,12 +205,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSites(): ?sites
+    public function getSites(): ?Sites
     {
         return $this->sites;
     }
 
-    public function setSites(?sites $sites): self
+    public function setSites(?Sites $sites): self
     {
         $this->sites = $sites;
 
