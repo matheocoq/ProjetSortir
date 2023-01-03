@@ -5,13 +5,15 @@ namespace App\Controller;
 use App\Entity\Sorties;
 use App\Form\SortiesType;
 use App\Repository\EtatsRepository;
+use App\Repository\LieuxRepository;
 use App\Repository\SortiesRepository;
 use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SitesRepository;
-use App\Repository\VilleRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -92,8 +94,6 @@ class SortieController extends AbstractController
 
         $sortieForm->handleRequest($request);
 
-        dump($this->getUser());
-
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             //dd($request->request->get('typeRegister'));
             // UNIQUEMENT POUR LES TESTS
@@ -124,7 +124,26 @@ class SortieController extends AbstractController
             'sortieForm' => $sortieForm->createView()
         ]);
     }
-
+    #[Route('/api/lieux')]
+    public function getLieux(LieuxRepository $lieuxRepository, VilleRepository $villeRepository): JsonResponse {
+        $lieux = $lieuxRepository->findAll();
+        $list = [];
+        foreach ($lieux as $unLieu) {
+            $ville = $villeRepository->find($unLieu->getVille()->getId());
+            $list[] = [
+                'idLieux' => $unLieu->getId(),
+                'nom' => $unLieu->getNom(),
+                'rue' => $unLieu->getRue(),
+                'latitude' => $unLieu->getLatitude(),
+                'longitude' => $unLieu->getLongitude(),
+                'idVille' => $ville->getId(),
+                'nomVille' => $ville->getNom(),
+                'codePostal' => $ville->getCodePostal()
+            ];
+        }
+        return new JsonResponse($list);
+	}
+	
     #[Route('/sortie/inscription/{id}', name: 'sortie_inscription')]
     public function inscription(EntityManagerInterface $entityManager,Sorties $sortie): Response
     {  
