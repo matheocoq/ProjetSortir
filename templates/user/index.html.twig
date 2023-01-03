@@ -12,7 +12,13 @@
     {{ form_start(userForm) }}
 
     {{ form_row(userForm.pseudo) }}
+    {{ form_row(userForm.prenom) }}
+    {{ form_row(userForm.nom) }}
+    {{ form_row(userForm.telephone) }}
+    {{ form_row(userForm.email) }}
     {{ form_row(userForm.password) }}
-    <button>Connection !</button>
+    {{ form_row(userForm._token) }}
+    <br>
+    <button>Enregistrer !</button>
 </div>
 {% endblock %}
