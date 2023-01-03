@@ -14,7 +14,9 @@ class UserUpdateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email',null,['attr' => [
+        'class' => 'form-control mb-1'
+    ]])
             ->add('password',RepeatedType::class, [
         'type' => PasswordType::class,
         'invalid_message' => 'The password fields must match.',
@@ -23,10 +25,18 @@ class UserUpdateType extends AbstractType
         'first_options'  => ['label' => 'Password'],
         'second_options' => ['label' => 'Repeat Password'],
         ])
-            ->add('nom')
-            ->add('prenom')
-            ->add('pseudo')
-            ->add('telephone')
+            ->add('nom',null,['attr' => [
+                'class' => 'form-control mb-1'
+            ]])
+            ->add('prenom',null,['attr' => [
+                'class' => 'form-control mb-1'
+            ]])
+            ->add('pseudo',null,['attr' => [
+                'class' => 'form-control mb-1'
+            ]])
+            ->add('telephone',null,['attr' => [
+                'class' => 'form-control mb-1'
+            ]])
         ;
     }
 
