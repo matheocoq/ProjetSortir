@@ -18,7 +18,11 @@
     {{ form_row(userForm.email) }}
     {{ form_row(userForm.password) }}
     {{ form_row(userForm._token) }}
+    {{ form_errors(userForm.password) }}
     <br>
-    <button>Enregistrer !</button>
+    <div style="text-align: center">
+        <button class="btn btn-outline-primary">Enregistrer !</button>
+    </div>
+
 </div>
 {% endblock %}
