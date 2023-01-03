@@ -35,7 +35,7 @@
             <td>{{ sortie.inscriptions|length }}/{{ sortie.nbInscriptionMax}}</td>
             <td>{% if inscrit == true %}X{% endif %}</td>
             <td>{{ sortie.organisateur.pseudo}}</td>
-            <td>{% if sortie.organisateur.id == app.user.id %} <a href="#">Modifier</a> {% if sortie.etat.id == 1 %} - <a href="#">Publier</a>{% endif %}{% else %} <a href="#">Afficher</a> {% if inscrit == true %} - <a href="#">Se désister</a> {% else %} - <a href="#">S'inscire</a> {% endif %}{% endif %}</td>
+            <td>{% if sortie.organisateur.id == app.user.id %} <a href="#">Modifier</a> {% if sortie.etat.id == 1 %} - <a href="#">Publier</a>{% endif %}{% else %} <a href="#">Afficher</a> {% if inscrit == true %} - <a href="#">Se désister</a> {% else %} {% if sortie.dateCloture|date("m/d/Y") >= "now"|date("m/d/Y")  %}- <a href="#">S'inscire</a> {% endif %}{% endif %}{% endif %}</td>
         </tr>
     {% endfor %}  
     </tbody>
