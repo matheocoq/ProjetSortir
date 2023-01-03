@@ -26,7 +26,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/create', name: 'sortie_create')]
-    public function create(): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, EtatsRepository $etatsRepository): Response
     {
 
         $sortie = new Sorties();
@@ -34,14 +34,31 @@ class SortieController extends AbstractController
 
         $sortieForm->handleRequest($request);
 
+        dump($this->getUser());
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            $sortie->setOrganisateur($userRepository->find(1));
-            $sortie->setEtat($etatsRepository->find(1));
+            //dd($request->request->get('typeRegister'));
+            // UNIQUEMENT POUR LES TESTS
+            $toGo = 'sortie_liste';
+            if ($this->getUser()){
+                $sortie->setOrganisateur($this->getUser());
+            } else {
+                // UNIQUEMENT POUR LES TESTS
+                $sortie->setOrganisateur($userRepository->find(1));
+                $toGo = 'sortie_create';
+            }
+
+            if ($request->request->get('typeRegister') === 'Publier la sortie') {
+                $sortie->setEtat($etatsRepository->find(2));
+            } else {
+                $sortie->setEtat($etatsRepository->find(1));
+            }
+
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('succes', 'Sortie added !');
-            return $this->redirectToRoute('sortie_create');
+            return $this->redirectToRoute($toGo);
         }
 
         return $this->render('sortie/sortieCreate.html.twig', [

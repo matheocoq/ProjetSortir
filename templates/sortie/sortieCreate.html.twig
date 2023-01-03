@@ -13,7 +13,12 @@
 
         {{ form_start(sortieForm) }}
         {{ form_widget(sortieForm) }}
-        <button type="submit" class="btn btn-outline-dark mt-3">Enregistrer</button>
+        <div class="d-flex justify-content-center mt-3">
+            <input type="submit" name="typeRegister" value="Enregistrer" class="btn btn-outline-dark me-2" />
+            <input type="submit" name="typeRegister" value="Publier la sortie" class="btn btn-outline-dark me-2" />
+            <a href="{{ path('sortie_liste') }}" type="button" class="btn btn-outline-dark">Annuler</a>
+        </div>
+
         {{ form_end(sortieForm) }}
     </div>
 

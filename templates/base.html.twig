@@ -52,7 +52,7 @@
         {# read and display all flash messages #}
         {% for label, messages in app.flashes %}
             {% for message in messages %}
-                <div class="container" style="min-height: 0px">
+                <div class="container mt-2" style="min-height: 0px">
                     <div class="alert alert-success flash-{{ label }}" role="alert">
                         <svg class="bi flex-shrink-0 me-2" height="24" width="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
                         {{ message }}
