@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscriptions;
 use App\Entity\Sorties;
 use App\Form\SortiesType;
 use App\Repository\EtatsRepository;
+use App\Repository\InscriptionsRepository;
 use App\Repository\LieuxRepository;
 use App\Repository\SortiesRepository;
 use App\Repository\UserRepository;
@@ -145,7 +147,27 @@ class SortieController extends AbstractController
 	}
 	
     #[Route('/sortie/inscription/{id}', name: 'sortie_inscription')]
-    public function inscription(EntityManagerInterface $entityManager,Sorties $sortie): Response
+    public function inscription(EntityManagerInterface $entityManager,Sorties $sortie,InscriptionsRepository $inscriptionsRepository): Response
+    {  
+        $user = $this->getUser();
+        $date = new DateTime();
+        if($sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2){
+            $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
+            if ($result == null) {
+                $inscription = new Inscriptions();
+                $inscription->setDateInscription($date);
+                $inscription->setParticipant($user);
+                $inscription->setSorties($sortie);
+                $entityManager->persist($inscription);
+                $entityManager->flush();
+            }
+        }
+        
+        return $this->redirectToRoute("sortie_liste");
+    }
+
+    #[Route('/sortie/desistement/{id}', name: 'sortie_desistement')]
+    public function desistement(EntityManagerInterface $entityManager,Sorties $sortie,InscriptionsRepository $inscriptionsRepository): Response
     {  
         $user = $this->getUser();
         $date = new DateTime();

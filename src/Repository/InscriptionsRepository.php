@@ -39,6 +39,18 @@ class InscriptionsRepository extends ServiceEntityRepository
         }
     }
 
+    public function findOneByUserSortie($user , $sortie): ?Inscriptions
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.participant = :user')
+            ->setParameter('user', $user)
+            ->andWhere('i.sorties = :sortie')
+            ->setParameter('sortie', $sortie)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Inscriptions[] Returns an array of Inscriptions objects
 //     */
