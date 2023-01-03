@@ -28,12 +28,12 @@
         {% endfor %}
          <tr>
             <td>{{ sortie.nom}}</td>
-            <td>{{ sortie.dateDebut}}</td>
-            <td>{{ sortie.dateCloture}}</td>
+            <td>{{ sortie.dateDebut|date("m/d/Y")}}</td>
+            <td>{{ sortie.dateCloture|date("m/d/Y")}}</td>
             <td>{{ sortie.inscriptions|length }}/{{ sortie.nbInscriptionMax}}</td>
+            <td>{% if inscrit == true %}X{% endif %}</td>
             <td>{{ sortie.organisateur.pseudo}}</td>
             <td>{% if sortie.organisateur.id == app.user.id %} <a href="#">Modifier</a> {% if sortie.etat.id == 1 %} - <a href="#">Publier</a>{% endif %}{% else %} <a href="#">Afficher</a> {% if inscrit == true %} - <a href="#">Se désister</a> {% else %} - <a href="#">S'inscire</a> {% endif %}{% endif %}</td>
-            <td></td>
         </tr>
     {% endfor %}  
     </tbody>
