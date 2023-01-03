@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SitesRepository;
 use App\Repository\VilleRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -122,5 +123,18 @@ class SortieController extends AbstractController
             'controller_name' => 'SortieController',
             'sortieForm' => $sortieForm->createView()
         ]);
+    }
+
+    #[Route('/sortie/inscription/{id}', name: 'sortie_inscription')]
+    public function inscription(EntityManagerInterface $entityManager,Sorties $sortie): Response
+    {  
+        $user = $this->getUser();
+        $date = new DateTime();
+        if($sortie){
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+        }
+        
+        return $this->redirectToRoute("sortie_liste");
     }
 }
