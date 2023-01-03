@@ -1,0 +1,47 @@
+<form method="get" name="recherche_sortie">
+    <h4></h4>
+    <div>
+        <label for="nom_site">Site</label>
+        <select name="nom_site" id="nom_site">
+        <option value="" {% if siteRechercher == "" %}selected{% endif %}></option>
+        {% for site in sites %}
+            <option value="{{site.id}}" {% if siteRechercher == site.id %} selected {% endif %}>{{site.nom}}</option>
+        {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="nom_sortie_contient">Le nom de la sortie contient</label>
+        <input type="text" name="nom_sortie_contient" id="nom_sortie_contient" value="{{ contient }}">
+    </div>
+
+    <div>
+        <label for="date_debut">Entre</label>
+        <input type="datetime-local" name="date_debut" id="date_debut" value="{{ dateDebut }}">
+        <label for="date_fin">Et</label>
+        <input type="datetime-local" name="date_fin" id="date_fin"  value="{{ dateFin }}">
+        <div class="alert alert-danger" role="alert" {% if dateValid %} style="display:none;" {% endif %} >La date de début doit être inférieur a la date de fin</div>
+    </div>
+    
+    <div>
+        <input type="checkbox" id="sortie_orga" name="sortie_orga" {% if orga %} checked {% endif %}>
+        <label for="sortie_orga">Sortie dont je suis l'organisateur/trice</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="sortie_insc" name="sortie_insc" {% if inscrit %} checked {% endif %}>
+        <label for="sortie_insc">Sortie au quel je suis inscrit/e</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="sortie_n_insc" name="sortie_n_insc" {% if nonInscrit %} checked {% endif %}>
+        <label for="sortie_n_insc">Sortie au quel je ne suis pas inscrit/e</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="sortie_passee" name="sortie_passee" {% if passer %} checked {% endif %}>
+        <label for="sortie_passee">Sortie passées</label>
+    </div>
+
+    <input type="submit" name="recherche_site" value="Rechercher">
+</form>
