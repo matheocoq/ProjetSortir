@@ -17,39 +17,11 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary py-1">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Logo Sortir.com</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        {% if app.user and app.user.administrateur == true %}
-                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Accueil</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Accueil</a>
-                        </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Mon profil</a>
-                        </li>
-                         {% if app.user %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_logout') }}">déconnection</a>
-                        </li>
-                        {% else %}
-                            <a class="nav-link" href="{{ path('app_login') }}">connection</a>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        {% if app.request.get('_route')!="app_login" %}
+             {% include 'nav.html.twig' %}
+        {% endif %}
+        
+       
         {# read and display all flash messages #}
         {% for label, messages in app.flashes %}
             {% for message in messages %}

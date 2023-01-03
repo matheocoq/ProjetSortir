@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/update', name: 'update')]
+    #[Route('/user/update', name: 'user_update')]
     public function update(Request $request,UserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager,UserRepository $userRepository): Response
     {
         $user = $this->getUser();
@@ -23,12 +23,14 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted()){
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $userForm->get('password')->getData()
-                )
-            );
+            if($userForm->get('password')->getData() != null) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $userForm->get('password')->getData()
+                    )
+                );
+            }
             $entityManager->flush();
         }
 

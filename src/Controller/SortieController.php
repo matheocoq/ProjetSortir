@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SortieController extends AbstractController
 {
-    #[Route('/', name: 'sortie_liste')]
+    #[Route('/sortie/liste', name: 'sortie_liste')]
     public function liste(SitesRepository $sitesRepository,SortiesRepository $sortiesRepository,Request $request): Response
     {  
 
