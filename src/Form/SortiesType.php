@@ -29,7 +29,7 @@ class SortiesType extends AbstractType
                     'label' => 'Nom de la sortie',
                     'required' => true,
                     'attr' => [
-                        'class' => 'form-control'
+                        'class' => 'form-control mb-1'
                     ],
                     'constraints' => [
                         new NotBlank([
@@ -46,10 +46,11 @@ class SortiesType extends AbstractType
                 'date_debut',
                 DateTimeType::class,
                 [
+                    'label' => 'Date de début',
                     'html5' => true,
                     'widget' => 'single_text',
                     'attr' => [
-                        'class' => 'form-control'
+                        'class' => 'form-control mb-1'
                     ],
                     'constraints' => [
                         new NotBlank([
@@ -64,8 +65,9 @@ class SortiesType extends AbstractType
             ->add(
                 'duree',
                 null, [
+                'label' => 'Durée (min)',
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-1',
                     'min' => '0'
                 ],
                     'constraints' => [
@@ -81,10 +83,11 @@ class SortiesType extends AbstractType
                 'date_cloture',
                 DateTimeType::class,
                 [
+                    'label' => 'Date de cloture',
                     'html5' => true,
                     'widget' => 'single_text',
                     'attr' => [
-                        'class' => 'form-control'
+                        'class' => 'form-control mb-1'
                     ],
                     'constraints' => [
                         new NotBlank([
@@ -99,9 +102,11 @@ class SortiesType extends AbstractType
             ->add(
                 'nb_inscription_max',
                 null, [
+                'label' => 'Nombre maximum de participant',
                 'attr' => [
                     'type' => 'number',
-                    'class' => 'form-control'
+                    'class' => 'form-control mb-1',
+                    'min' => '0'
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -119,7 +124,7 @@ class SortiesType extends AbstractType
                     'label' => 'Description de la sortie',
                     'required' => true,
                     'attr' => [
-                        'class' => 'form-control'
+                        'class' => 'form-control mb-1'
                     ],
                     'constraints' => [
                         new NotBlank([
@@ -131,6 +136,7 @@ class SortiesType extends AbstractType
             ->add(
                 'lieux',
                 EntityType::class, [
+                'label' => 'Lieux',
                 'class' => Lieux::class,
                 'choice_label' => 'nom',
                 'attr' => [
