@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sorties;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,59 @@ class SortiesRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return Sorties[] Returns an array of Sorties objects
+     */
+    public function findByRecherche($param,$user): array
+    {
+        $date= new DateTime();
+        $query=  $this->createQueryBuilder('s');
+        if ($param->get("nom_site")!="") {
+            $query->innerJoin('s.organisateur', 'o');
+            $query->andWhere('o.sites = :site');
+            $query->setParameter('site',$param->get("nom_site"));
+        }
+        if ($param->get("nom_sortie_contient")!="") {
+            $query->andWhere("s.nom LIKE :nom_sortie");
+            $query->setParameter('nom_sortie',"%".$param->get("nom_sortie_contient")."%");
+        }
+        if ($param->get("date_debut")!="") {
+            $query->andWhere("s.date_debut >= :date_debut ");
+            $query->setParameter('date_debut',$param->get("date_debut"));
+           
+        }
+        if ($param->get("date_fin")!="") {
+            $query->andWhere("s.date_debut <= :date_fin");
+            $query->setParameter('date_fin',$param->get("date_fin"));
+        }
+        if ($param->get("sortie_orga")!=null) {
+            $query->andWhere("s.organisateur = :organ");
+            $query->setParameter('organ',$user->getId());
+        }
+        if ($param->get("sortie_insc")!=null || $param->get("sortie_n_insc")!=null) {
+           
+            if ($param->get("sortie_insc")!=null && $param->get("sortie_n_insc")==null) {
+                $query->innerJoin('s.inscriptions', 'i');
+                $query->andWhere('i.participant = :participant');
+                $query->setParameter('participant',$user->getId());
+            }
+            else {
+               if ($param->get("sortie_insc")==null && $param->get("sortie_n_insc")!=null) {
+                    $query->innerJoin('s.inscriptions', 'i');
+                    $query->andWhere('i.participant != :participant');
+                    $query->setParameter('participant',$user->getId());
+               }
+            }
+        }
+        if ($param->get("sortie_passee")!=null) {
+            $query->andWhere("s.date_debut < :finie ");
+            $query->setParameter('finie',$date);
+        }
+        $query->orderBy('s.date_debut', 'ASC');
+        $requete=$query->getQuery();
+        return $requete->getResult();
     }
 
 //    /**
