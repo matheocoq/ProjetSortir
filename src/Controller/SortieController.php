@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
-use App\Repository\SitesRepository;
+use App\Entity\Sorties;
+use App\Form\SortiesType;
+use App\Repository\EtatsRepository;
 use App\Repository\SortiesRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SitesRepository;
 use App\Repository\VilleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,10 +83,44 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/create', name: 'sortie_create')]
-    public function create(): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, EtatsRepository $etatsRepository): Response
     {
+
+        $sortie = new Sorties();
+        $sortieForm = $this->createForm(SortiesType::class, $sortie);
+
+        $sortieForm->handleRequest($request);
+
+        dump($this->getUser());
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            //dd($request->request->get('typeRegister'));
+            // UNIQUEMENT POUR LES TESTS
+            $toGo = 'sortie_liste';
+            if ($this->getUser()){
+                $sortie->setOrganisateur($this->getUser());
+            } else {
+                // UNIQUEMENT POUR LES TESTS
+                $sortie->setOrganisateur($userRepository->find(1));
+                $toGo = 'sortie_create';
+            }
+
+            if ($request->request->get('typeRegister') === 'Publier la sortie') {
+                $sortie->setEtat($etatsRepository->find(2));
+            } else {
+                $sortie->setEtat($etatsRepository->find(1));
+            }
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('succes', 'Sortie added !');
+            return $this->redirectToRoute($toGo);
+        }
+
         return $this->render('sortie/sortieCreate.html.twig', [
             'controller_name' => 'SortieController',
+            'sortieForm' => $sortieForm->createView()
         ]);
     }
 }
