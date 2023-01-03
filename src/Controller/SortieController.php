@@ -13,11 +13,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/sortie')]
+
 class SortieController extends AbstractController
 {
-    #[Route('/create', name: 'sortie_create')]
-    public function create(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, EtatsRepository $etatsRepository): Response
+    #[Route('/', name: 'sortie_liste')]
+    public function liste(SortiesRepository $sortiesRepository): Response
+    {  
+        $sorties = $sortiesRepository->findAll();
+        return $this->render('sortie/sortieListe.html.twig', [
+            'sorties' => $sorties,
+        ]);
+    }
+
+    #[Route('/sortie/create', name: 'sortie_create')]
+    public function create(): Response
     {
 
         $sortie = new Sorties();
