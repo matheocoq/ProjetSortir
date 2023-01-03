@@ -14,8 +14,38 @@
     <div class="container mt-3">
         <h1 class="d-flex justify-content-center">Créer une sortie</h1>
 
-        {{ form_start(sortieForm) }}
-        {{ form_widget(sortieForm) }}
+        <div class="row mb-5">
+            <div class="col">
+                {{ form_start(sortieForm) }}
+                {{ form_widget(sortieForm) }}
+            </div>
+            <div class="col">
+                <div class="mb-2">
+                    <label for="ville" class="form-label mb-0">Ville</label>
+                    <input type="text" class="form-control" id="ville" disabled>
+                </div>
+
+                <div class="mb-2">
+                    <label for="rue" class="form-label mb-0">Rue</label>
+                    <input type="text" class="form-control" id="rue" disabled>
+                </div>
+
+                <div class="mb-2">
+                    <label for="cp" class="form-label mb-0">Code postal</label>
+                    <input type="text" class="form-control" id="cp" disabled>
+                </div>
+
+                <div class="mb-2">
+                    <label for="latitude" class="form-label mb-0">Latitude</label>
+                    <input type="text" class="form-control" id="latitude" disabled>
+                </div>
+
+                <div class="mb-2">
+                    <label for="longitude" class="form-label mb-0">Longitude</label>
+                    <input type="text" class="form-control" id="longitude" disabled>
+                </div>
+            </div>
+        </div>
 
 
 
