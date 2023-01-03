@@ -23,12 +23,14 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted()){
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $userForm->get('password')->getData()
-                )
-            );
+            if($userForm->get('password')->getData() != null) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $userForm->get('password')->getData()
+                    )
+                );
+            }
             $entityManager->flush();
         }
 
