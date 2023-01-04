@@ -45,10 +45,14 @@ class SortiesRepository extends ServiceEntityRepository
      */
     public function findByNonClos(): array
     {
+        $today = date("Y-m-d H:i:s ");
+        $timestamp = strtotime($today);
+        $nextMonth = strtotime("last month", $timestamp);
+        $nextMonthDate = date("Y-m-d H:i:s", $nextMonth);
         return $this->createQueryBuilder('s')
-            ->andWhere("s.etat != 3 ")
+            ->andWhere("s.date_debut >= :mois_plus_un")
+            ->setParameter('mois_plus_un',$nextMonthDate)
             ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
@@ -60,6 +64,10 @@ class SortiesRepository extends ServiceEntityRepository
     public function findByRecherche($param,$user): array
     {
         $date= new DateTime();
+        $today = date("Y-m-d H:i:s ");
+        $timestamp = strtotime($today);
+        $nextMonth = strtotime("last month", $timestamp);
+        $nextMonthDate = date("Y-m-d H:i:s", $nextMonth);
         $query=  $this->createQueryBuilder('s');
         if ($param->get("nom_site")!="") {
             $query->innerJoin('s.organisateur', 'o');
@@ -102,7 +110,8 @@ class SortiesRepository extends ServiceEntityRepository
             $query->andWhere("s.date_debut < :finie ");
             $query->setParameter('finie',$date);
         }
-        $query->andWhere("s.etat != 3 ");
+        $query->andWhere("s.date_debut >= :mois_plus_un");
+        $query->setParameter('mois_plus_un',$nextMonthDate);
         $query->orderBy('s.date_debut', 'ASC');
         $requete=$query->getQuery();
         return $requete->getResult();
