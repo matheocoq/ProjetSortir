@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'ChangeEtatCommand',
+    name: 'app:update-event-states',
     description: 'Add a short description for your command',
 )]
 class ChangeEtatCommand extends Command
@@ -28,23 +28,22 @@ class ChangeEtatCommand extends Command
     private $logger;
 
     /** @var EventStateHelper */
-    private $stateHelper;
     private $sortieRepository;
     private $etatsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager,SortiesRepository $sortieRepository,EtatsRepository $etatsRepository)
+    public function __construct( EntityManagerInterface $entityManager,SortiesRepository $sortieRepository,EtatsRepository $etatsRepository)
     {
         $this->entityManager = $entityManager;
-      
         $this->sortieRepository=$sortieRepository;
         $this->etatsRepository=$etatsRepository;
+        parent::__construct();
     }
 
     protected function configure()
     {
-        $this
-            ->setDescription('Met à jour les états des sorties')
-        ;
+        $this->setName('app:update-event-states');
+        $this->setDescription('Met à jour les états des sorties');
+        $this->setHelp("Je serai affiche si on lance la commande php bin/console app:update-event-states");
     }
 
     /**
@@ -54,7 +53,7 @@ class ChangeEtatCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->logger->info('event states update started');
+       
 
         $io = new SymfonyStyle($input, $output);
 
@@ -69,22 +68,31 @@ class ChangeEtatCommand extends Command
                 $sortie->setEtat($etat);
                 $this->entityManager->persist($sortie);
                 $this->entityManager->flush();
+                $message = $sortie->getId() . " " . $sortie->getNom() . " : statut changé en closed";
+                //écrit le message dans la console
+                $io->writeln($message);
                 continue;
             }
 
-            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3) && $sortie->getDateDebut()<$now  ){
+            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3) && $sortie->getDateDebut()<$now && $now< $now->modify("+".$sortie->getDuree()." minutes")->format("Y-m-d H:i:s")){
                 $etat=$this->etatsRepository->find(4);
                 $sortie->setEtat($etat);
                 $this->entityManager->persist($sortie);
                 $this->entityManager->flush();
+                $message = $sortie->getId() . " " . $sortie->getNom() . " : statut changé en closed";
+                //écrit le message dans la console
+                $io->writeln($message);
                 continue;
             }
 
-            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3 || $sortie->getEtat()->getId()==4)  ){
+            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3 || $sortie->getEtat()->getId()==4) && $now > $now->modify("+".$sortie->getDuree()." minutes")->format("Y-m-d H:i:s") ){
                 $etat=$this->etatsRepository->find(5);
                 $sortie->setEtat($etat);
                 $this->entityManager->persist($sortie);
                 $this->entityManager->flush();
+                $message = $sortie->getId() . " " . $sortie->getNom() . " : statut changé en closed";
+                //écrit le message dans la console
+                $io->writeln($message);
                 continue;
             }
 
