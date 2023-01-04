@@ -38,4 +38,21 @@ class UserController extends AbstractController
             'userForm' => $userForm->createView()
         ]);
     }
+
+    #[Route('/user/detail/{id}', name: 'user_detail')]
+    public function detail($id, Request $request, UserRepository $userRepository): Response
+    {
+
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+
+
+        return $this->render('user/userDetail.html.twig', [
+            'user' => $user
+        ]);
+    }
 }
