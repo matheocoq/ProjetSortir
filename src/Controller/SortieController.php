@@ -28,7 +28,8 @@ class SortieController extends AbstractController
     {  
         
     
-
+        $dateDuJour =date("Y-m-d H:i:s");
+        
         $sorties = $sortiesRepository->findByNonClos();
         $sites= $sitesRepository->findAll();
         $siteRechercher="";
@@ -85,7 +86,8 @@ class SortieController extends AbstractController
             'inscrit' =>$inscrit,
             'nonInscrit' =>$nonInscrit,
             'passer' =>$passer,
-            'dateValid'=>$dateValid
+            'dateValid'=>$dateValid,
+            'dateDuJour'=>$dateDuJour
         ]);
     }
 
