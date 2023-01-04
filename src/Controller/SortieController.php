@@ -94,32 +94,63 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            //dd($request->request->get('typeRegister'));
-            // UNIQUEMENT POUR LES TESTS
-            $toGo = 'sortie_liste';
-            if ($this->getUser()){
-                $sortie->setOrganisateur($this->getUser());
-            } else {
-                // UNIQUEMENT POUR LES TESTS
-                $sortie->setOrganisateur($userRepository->find(1));
-                $toGo = 'sortie_create';
-            }
-
+            $sortie->setOrganisateur($this->getUser());
             if ($request->request->get('typeRegister') === 'Publier la sortie') {
                 $sortie->setEtat($etatsRepository->find(2));
             } else {
                 $sortie->setEtat($etatsRepository->find(1));
             }
-
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('succes', 'Sortie added !');
-            return $this->redirectToRoute($toGo);
+            return $this->redirectToRoute('sortie_liste');
         }
 
         return $this->render('sortie/sortieCreate.html.twig', [
             'controller_name' => 'SortieController',
+            'sortieForm' => $sortieForm->createView()
+        ]);
+    }
+
+    #[Route('/sortie/update/{id}', name: 'sortie_update')]
+    public function update($id, Request $request, EntityManagerInterface $entityManager, SortiesRepository $sortiesRepository, EtatsRepository $etatsRepository): Response
+    {
+
+        $sortie = $sortiesRepository->find($id);
+
+        if (!$sortie || $sortie->getDateDebut() < new \DateTime() || $sortie->getDateCloture() < new \DateTime() || $sortie->getEtat()->getId() !== 1) {
+            return $this->redirectToRoute('sortie_liste');
+        }
+        $sortieForm = $this->createForm(SortiesType::class, $sortie);
+
+        $sortieForm->handleRequest($request);
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $messageSucces = '';
+            if ($request->request->get('typeRegister') === 'Supprimer la sortie') {
+                $entityManager->remove($sortie);
+                $messageSucces = 'Sortie deleted !';
+            }
+            else if ($request->request->get('typeRegister') === 'Publier la sortie') {
+                $sortie->setEtat($etatsRepository->find(2));
+                $entityManager->persist($sortie);
+                $messageSucces = 'Sortie updated !';
+            }
+            else {
+                $sortie->setEtat($etatsRepository->find(1));
+                $entityManager->persist($sortie);
+                $messageSucces = 'Sortie updated !';
+            }
+
+
+            $entityManager->flush();
+
+            $this->addFlash('succes', $messageSucces);
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+        return $this->render('sortie/sortieUpdate.html.twig', [
             'sortieForm' => $sortieForm->createView()
         ]);
     }
