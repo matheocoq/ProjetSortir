@@ -2,15 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscriptions;
 use App\Entity\Sorties;
 use App\Form\SortiesType;
 use App\Repository\EtatsRepository;
+use App\Repository\InscriptionsRepository;
 use App\Repository\LieuxRepository;
 use App\Repository\SortiesRepository;
 use App\Repository\UserRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SitesRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -172,5 +175,43 @@ class SortieController extends AbstractController
             ];
         }
         return new JsonResponse($list);
+	}
+	
+    #[Route('/sortie/inscription/{id}', name: 'sortie_inscription')]
+    public function inscription(EntityManagerInterface $entityManager,Sorties $sortie,InscriptionsRepository $inscriptionsRepository): Response
+    {  
+        $user = $this->getUser();
+        $date = new DateTime();
+        $listeInscription = $inscriptionsRepository->findBySortie($sortie->getId());
+        $nbinscrit=count($listeInscription);
+        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2 && $nbinscrit+1<=$sortie->getNbInscriptionMax()){
+            $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
+            if ($result == null) {
+                $inscription = new Inscriptions();
+                $inscription->setDateInscription($date);
+                $inscription->setParticipant($user);
+                $inscription->setSorties($sortie);
+                $entityManager->persist($inscription);
+                $entityManager->flush();
+            }
+        }
+        
+        return $this->redirectToRoute("sortie_liste");
+    }
+
+    #[Route('/sortie/desistement/{id}', name: 'sortie_desistement')]
+    public function desistement(EntityManagerInterface $entityManager,Sorties $sortie,InscriptionsRepository $inscriptionsRepository): Response
+    {  
+        $user = $this->getUser();
+        $date = new DateTime();
+        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2){
+            $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
+            if ($result != null) {
+                $entityManager->remove($result);
+                $entityManager->flush();
+            }
+        }
+        
+        return $this->redirectToRoute("sortie_liste");
     }
 }
