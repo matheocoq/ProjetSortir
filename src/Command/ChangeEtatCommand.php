@@ -32,10 +32,10 @@ class ChangeEtatCommand extends Command
     private $sortieRepository;
     private $etatsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager,string $name = null,SortiesRepository $sortieRepository,EtatsRepository $etatsRepository)
+    public function __construct(EntityManagerInterface $entityManager,SortiesRepository $sortieRepository,EtatsRepository $etatsRepository)
     {
         $this->entityManager = $entityManager;
-        parent::__construct($name);
+      
         $this->sortieRepository=$sortieRepository;
         $this->etatsRepository=$etatsRepository;
     }
@@ -72,7 +72,7 @@ class ChangeEtatCommand extends Command
                 continue;
             }
 
-            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3) && $sortie->getDateDebut()<$now && ){
+            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3) && $sortie->getDateDebut()<$now  ){
                 $etat=$this->etatsRepository->find(4);
                 $sortie->setEtat($etat);
                 $this->entityManager->persist($sortie);
@@ -80,7 +80,7 @@ class ChangeEtatCommand extends Command
                 continue;
             }
 
-            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3 || $sortie->getEtat()->getId()==4) && ){
+            if (($sortie->getEtat()->getId()==2 || $sortie->getEtat()->getId()==3 || $sortie->getEtat()->getId()==4)  ){
                 $etat=$this->etatsRepository->find(5);
                 $sortie->setEtat($etat);
                 $this->entityManager->persist($sortie);
