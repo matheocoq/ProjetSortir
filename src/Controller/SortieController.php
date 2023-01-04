@@ -250,7 +250,7 @@ class SortieController extends AbstractController
 
             $sortie= $sortiesRepository->find($request->get("identifiant"));
 
-            if( $sortie != null && $sortie->getEtat()->getId() == 2 && $sortie->getOrganisateur()->getId() == $user->getId()){
+            if( $sortie != null && ($sortie->getEtat()->getId() == 2 || $sortie->getEtat()->getId() == 3 )&& $sortie->getOrganisateur()->getId() == $user->getId()){
                 $etat=$etatsRepository->find(6);
                 $sortie->setEtat($etat);
                 $sortie->setDescription($request->get("motif"));
