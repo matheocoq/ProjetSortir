@@ -24,6 +24,7 @@ security:
                 # checkbox in the login form (see below), uncomment the
                 # following line to always enable it.
                 #always_remember_me: true
+                path: \
             logout:
                 path: app_logout
                 # where to redirect after logout
