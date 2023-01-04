@@ -94,7 +94,7 @@ class SortiesType extends AbstractType
                             'message' => 'Please enter a date cloture'
                         ]),
                         new GreaterThan([
-                            'value' => new \DateTime()
+                            'value' => new \DateTime(),
                         ])
                     ]
                 ]
