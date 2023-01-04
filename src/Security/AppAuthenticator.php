@@ -27,8 +27,10 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    private $userRepository;
+    public function __construct(private UrlGeneratorInterface $urlGenerator , UserRepository $userRepository)
     {
+        $this->userRepository = $userRepository;
     }
     public function getCredentials(Request $request)
     {
@@ -38,10 +40,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
     }
-    public function getUser($credentials, UserProviderInterface $userProvider): ?User
-    {
-        return $this->entityManager->getRepository(User::class)->findByEmailOrUsername($credentials['email_or_username']);
-    }
+
 
     public function authenticate(Request $request): Passport
     {
@@ -50,7 +49,9 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         $request->getSession()->set(Security::LAST_USERNAME, $identifiant);
 
         return new Passport(
-            new UserBadge($identifiant),
+            new UserBadge($identifiant,function (string $userIdentifier) {
+        return $this->userRepository->loadUserByUsername($userIdentifier);
+        }),
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
