@@ -26,6 +26,8 @@ class SortieController extends AbstractController
     #[Route('/sortie/liste', name: 'sortie_liste')]
     public function liste(SitesRepository $sitesRepository,SortiesRepository $sortiesRepository,Request $request): Response
     {  
+        
+    
 
         $sorties = $sortiesRepository->findByNonClos();
         $sites= $sitesRepository->findAll();
@@ -177,7 +179,7 @@ class SortieController extends AbstractController
         $messageSucces = '';
         $listeInscription = $inscriptionsRepository->findBySortie($sortie->getId());
         $nbinscrit=count($listeInscription);
-        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2 && $nbinscrit+1<=$sortie->getNbInscriptionMax()){
+        if( $sortie->getDateDebut()>=$date && $sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2 && $nbinscrit+1<=$sortie->getNbInscriptionMax()){
             $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
             if ($result == null) {
                 $inscription = new Inscriptions();
@@ -188,6 +190,9 @@ class SortieController extends AbstractController
                 $entityManager->flush();
                 $messageSucces = 'Vous êtes bien inscrit !';
             }
+        }
+        else{
+            $messageSucces = 'erreur inscription';
         }
         $this->addFlash('succes', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
@@ -265,19 +270,4 @@ class SortieController extends AbstractController
         return $this->redirectToRoute("sortie_liste");
     }
 
-    /*#[Route('/sortie/annuler/{id}', name: 'sortie_annuler')]
-    public function annuler(EntityManagerInterface $entityManager,Sorties $sortie,EtatsRepository $etatsRepository): Response
-    {  
-        $user = $this->getUser();
-        $messageSucces = '';
-        if( $sortie->getEtat()->getId() == 2 && $sortie->getOrganisateur()->getId() == $user->getId()){
-            $etat=$etatsRepository->find(6);
-            $sortie->setEtat($etat);
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-            $messageSucces = 'Sortie annuled !';
-        }
-        $this->addFlash('succes', $messageSucces);
-        return $this->redirectToRoute("sortie_liste");
-    }*/
 }
