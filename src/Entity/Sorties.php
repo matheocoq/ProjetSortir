@@ -49,7 +49,7 @@ class Sorties
     #[ORM\JoinColumn(nullable: false)]
     private ?Etats $etat = null;
 
-    #[ORM\OneToMany(mappedBy: 'sorties', targetEntity: Inscriptions::class)]
+    #[ORM\OneToMany(mappedBy: 'sorties', targetEntity: Inscriptions::class, fetch: "EAGER")]
     private Collection $inscriptions;
 
     public function __construct()

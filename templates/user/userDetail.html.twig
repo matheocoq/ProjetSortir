@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    {{ parent() }} | Detail user
+
+{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center mt-3">{{ user.pseudo }}</h1>
+
+    <div class="row mb-5 d-flex">
+
+        <div class="col-3 mt-5">
+            <img src="https://fakeimg.pl/250x250/">
+        </div>
+
+        <div class="col-8 mt-5">
+            <div class="row justify-content-center mb-3">
+                <div class="col-3">
+                    Prénom:
+                </div>
+                <div class="col-4">
+                    {{ user.prenom }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-3">
+                    Nom:
+                </div>
+                <div class="col-4">
+                    {{ user.nom }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-3">
+                    Téléphone:
+                </div>
+                <div class="col-4">
+                    {{ user.telephone }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-3">
+                    Email:
+                </div>
+                <div class="col-4">
+                    {{ user.email }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-3">
+                    Site de rattachement:
+                </div>
+                <div class="col-4">
+                    {{ user.sites.nom }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-2">
+            <button class="btn btn-outline-secondary" onclick="javascript:window.history.back()">Retour</button>
+        </div>
+    </div>
+
+{% endblock %}
