@@ -27,7 +27,7 @@ class SortieController extends AbstractController
     public function liste(SitesRepository $sitesRepository,SortiesRepository $sortiesRepository,Request $request): Response
     {  
 
-        $sorties = $sortiesRepository->findAll();
+        $sorties = $sortiesRepository->findByNonClos();
         $sites= $sitesRepository->findAll();
         $siteRechercher="";
         $contient=null;
@@ -131,22 +131,13 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $messageSucces = '';
-            if ($request->request->get('typeRegister') === 'Supprimer la sortie') {
-                $entityManager->remove($sortie);
-                $messageSucces = 'Sortie deleted !';
-            }
-            else if ($request->request->get('typeRegister') === 'Publier la sortie') {
-                $sortie->setEtat($etatsRepository->find(2));
-                $entityManager->persist($sortie);
-                $messageSucces = 'Sortie updated !';
-            }
-            else {
+
+            if ($request->request->get('typeRegister') === 'Enregistrer') {
                 $sortie->setEtat($etatsRepository->find(1));
                 $entityManager->persist($sortie);
                 $messageSucces = 'Sortie updated !';
             }
-
-
+        
             $entityManager->flush();
 
             $this->addFlash('succes', $messageSucces);
@@ -154,6 +145,7 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/sortieUpdate.html.twig', [
+            'sortie'=> $sortie,
             'sortieForm' => $sortieForm->createView()
         ]);
     }
@@ -182,6 +174,7 @@ class SortieController extends AbstractController
     {  
         $user = $this->getUser();
         $date = new DateTime();
+        $messageSucces = '';
         $listeInscription = $inscriptionsRepository->findBySortie($sortie->getId());
         $nbinscrit=count($listeInscription);
         if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2 && $nbinscrit+1<=$sortie->getNbInscriptionMax()){
@@ -193,9 +186,10 @@ class SortieController extends AbstractController
                 $inscription->setSorties($sortie);
                 $entityManager->persist($inscription);
                 $entityManager->flush();
+                $messageSucces = 'Vous êtes bien inscrit !';
             }
         }
-        
+        $this->addFlash('succes', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
     }
 
@@ -204,14 +198,86 @@ class SortieController extends AbstractController
     {  
         $user = $this->getUser();
         $date = new DateTime();
+        $messageSucces = '';
         if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2){
             $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
             if ($result != null) {
                 $entityManager->remove($result);
                 $entityManager->flush();
+                $messageSucces = 'Vous êtes bien d\'ésinscrit !';
             }
         }
-        
+        $this->addFlash('succes', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
     }
+
+    #[Route('/sortie/publier/{id}', name: 'sortie_publier')]
+    public function publier(EntityManagerInterface $entityManager,Sorties $sortie,EtatsRepository $etatsRepository): Response
+    {  
+        $user = $this->getUser();
+        $messageSucces = '';
+        if( $sortie->getEtat()->getId() == 1 && $sortie->getOrganisateur()->getId() == $user->getId()){
+            $etat=$etatsRepository->find(2);
+            $sortie->setEtat($etat);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $messageSucces = 'Sortie publied !';
+        }
+        $this->addFlash('succes', $messageSucces);
+        return $this->redirectToRoute("sortie_liste");
+    }
+
+    #[Route('/sortie/supprimer/{id}', name: 'sortie_supprimer')]
+    public function supprimer(EntityManagerInterface $entityManager,Sorties $sortie): Response
+    {  
+        $user = $this->getUser();
+        $messageSucces = '';
+        if( $sortie->getEtat()->getId() == 1 && $sortie->getOrganisateur()->getId() == $user->getId()){
+            $entityManager->remove($sortie);
+            $entityManager->flush();
+            $messageSucces = 'Sortie deleted !';
+        }
+        $this->addFlash('succes', $messageSucces);
+        return $this->redirectToRoute("sortie_liste");
+    }
+
+    #[Route('/sortie/annuler', name: 'sortie_annuler')]
+    public function annuler(EntityManagerInterface $entityManager,EtatsRepository $etatsRepository,Request $request,SortiesRepository $sortiesRepository): Response
+    {  
+        $user = $this->getUser();
+        $messageSucces = '';
+        if ($request->get("valider-annulation") != null && $request->get("identifiant") != null && $request->get("identifiant") != "" && $request->get("motif") != null) {
+
+            $sortie= $sortiesRepository->find($request->get("identifiant"));
+
+            if( $sortie != null && $sortie->getEtat()->getId() == 2 && $sortie->getOrganisateur()->getId() == $user->getId()){
+                $etat=$etatsRepository->find(6);
+                $sortie->setEtat($etat);
+                $sortie->setDescription($request->get("motif"));
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+                $messageSucces = 'Sortie annuled !';
+            }
+
+        }
+
+        $this->addFlash('succes', $messageSucces);
+        return $this->redirectToRoute("sortie_liste");
+    }
+
+    /*#[Route('/sortie/annuler/{id}', name: 'sortie_annuler')]
+    public function annuler(EntityManagerInterface $entityManager,Sorties $sortie,EtatsRepository $etatsRepository): Response
+    {  
+        $user = $this->getUser();
+        $messageSucces = '';
+        if( $sortie->getEtat()->getId() == 2 && $sortie->getOrganisateur()->getId() == $user->getId()){
+            $etat=$etatsRepository->find(6);
+            $sortie->setEtat($etat);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $messageSucces = 'Sortie annuled !';
+        }
+        $this->addFlash('succes', $messageSucces);
+        return $this->redirectToRoute("sortie_liste");
+    }*/
 }

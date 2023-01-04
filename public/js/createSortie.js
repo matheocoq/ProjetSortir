@@ -9,7 +9,7 @@ class Fetch {
 
 
 const init = async () => {
-    const res = await Fetch.get('http://localhost/ProjetSortir/public/api/lieux')
+    const res = await Fetch.get('/api/lieux')
     const sorties_lieux = document.getElementById('sorties_lieux');
     const villeIn = document.getElementById('ville');
     const rueIn = document.getElementById('rue');

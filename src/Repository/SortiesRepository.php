@@ -43,6 +43,20 @@ class SortiesRepository extends ServiceEntityRepository
     /**
      * @return Sorties[] Returns an array of Sorties objects
      */
+    public function findByNonClos(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere("s.etat != 3 ")
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Sorties[] Returns an array of Sorties objects
+     */
     public function findByRecherche($param,$user): array
     {
         $date= new DateTime();
@@ -88,6 +102,7 @@ class SortiesRepository extends ServiceEntityRepository
             $query->andWhere("s.date_debut < :finie ");
             $query->setParameter('finie',$date);
         }
+        $query->andWhere("s.etat != 3 ");
         $query->orderBy('s.date_debut', 'ASC');
         $requete=$query->getQuery();
         return $requete->getResult();
