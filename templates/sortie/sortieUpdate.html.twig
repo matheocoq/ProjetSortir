@@ -1,18 +1,17 @@
 {% extends 'base.html.twig' %}
 
-
-
 {% block title %}
 
-    {{ parent() }} | Create a new sortie
+    {{ parent() }} | Update a sortie
 
 {% endblock %}
 
 {% block body %}
+
     <script src="{{ asset('js/createSortie.js') }}" defer></script>
 
     <div class="container mt-3">
-        <h1 class="d-flex justify-content-center">Créer une sortie</h1>
+        <h1 class="d-flex justify-content-center">Modifier une sortie</h1>
 
         <div class="row mb-5">
             <div class="col">
@@ -52,9 +51,13 @@
         <div class="d-flex justify-content-center mt-3">
             <input type="submit" name="typeRegister" value="Enregistrer" class="btn btn-outline-dark me-2" />
             <input type="submit" name="typeRegister" value="Publier la sortie" class="btn btn-outline-dark me-2" />
+            <input type="submit" name="typeRegister" value="Supprimer la sortie" class="btn btn-outline-dark me-2" />
             <a href="{{ path('sortie_liste') }}" type="button" class="btn btn-outline-dark">Annuler</a>
         </div>
         {{ form_end(sortieForm) }}
     </div>
 
 {% endblock %}
+
+
+

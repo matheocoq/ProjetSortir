@@ -2,15 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscriptions;
 use App\Entity\Sorties;
 use App\Form\SortiesType;
 use App\Repository\EtatsRepository;
+use App\Repository\InscriptionsRepository;
+use App\Repository\LieuxRepository;
 use App\Repository\SortiesRepository;
 use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SitesRepository;
-use App\Repository\VilleRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -91,36 +96,122 @@ class SortieController extends AbstractController
 
         $sortieForm->handleRequest($request);
 
-        dump($this->getUser());
-
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            //dd($request->request->get('typeRegister'));
-            // UNIQUEMENT POUR LES TESTS
-            $toGo = 'sortie_liste';
-            if ($this->getUser()){
-                $sortie->setOrganisateur($this->getUser());
-            } else {
-                // UNIQUEMENT POUR LES TESTS
-                $sortie->setOrganisateur($userRepository->find(1));
-                $toGo = 'sortie_create';
-            }
-
+            $sortie->setOrganisateur($this->getUser());
             if ($request->request->get('typeRegister') === 'Publier la sortie') {
                 $sortie->setEtat($etatsRepository->find(2));
             } else {
                 $sortie->setEtat($etatsRepository->find(1));
             }
-
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('succes', 'Sortie added !');
-            return $this->redirectToRoute($toGo);
+            return $this->redirectToRoute('sortie_liste');
         }
 
         return $this->render('sortie/sortieCreate.html.twig', [
             'controller_name' => 'SortieController',
             'sortieForm' => $sortieForm->createView()
         ]);
+    }
+
+    #[Route('/sortie/update/{id}', name: 'sortie_update')]
+    public function update($id, Request $request, EntityManagerInterface $entityManager, SortiesRepository $sortiesRepository, EtatsRepository $etatsRepository): Response
+    {
+
+        $sortie = $sortiesRepository->find($id);
+
+        if (!$sortie || $sortie->getDateDebut() < new \DateTime() || $sortie->getDateCloture() < new \DateTime() || $sortie->getEtat()->getId() !== 1) {
+            return $this->redirectToRoute('sortie_liste');
+        }
+        $sortieForm = $this->createForm(SortiesType::class, $sortie);
+
+        $sortieForm->handleRequest($request);
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $messageSucces = '';
+            if ($request->request->get('typeRegister') === 'Supprimer la sortie') {
+                $entityManager->remove($sortie);
+                $messageSucces = 'Sortie deleted !';
+            }
+            else if ($request->request->get('typeRegister') === 'Publier la sortie') {
+                $sortie->setEtat($etatsRepository->find(2));
+                $entityManager->persist($sortie);
+                $messageSucces = 'Sortie updated !';
+            }
+            else {
+                $sortie->setEtat($etatsRepository->find(1));
+                $entityManager->persist($sortie);
+                $messageSucces = 'Sortie updated !';
+            }
+
+
+            $entityManager->flush();
+
+            $this->addFlash('succes', $messageSucces);
+            return $this->redirectToRoute('sortie_liste');
+        }
+
+        return $this->render('sortie/sortieUpdate.html.twig', [
+            'sortieForm' => $sortieForm->createView()
+        ]);
+    }
+    #[Route('/api/lieux')]
+    public function getLieux(LieuxRepository $lieuxRepository, VilleRepository $villeRepository): JsonResponse {
+        $lieux = $lieuxRepository->findAll();
+        $list = [];
+        foreach ($lieux as $unLieu) {
+            $ville = $villeRepository->find($unLieu->getVille()->getId());
+            $list[] = [
+                'idLieux' => $unLieu->getId(),
+                'nom' => $unLieu->getNom(),
+                'rue' => $unLieu->getRue(),
+                'latitude' => $unLieu->getLatitude(),
+                'longitude' => $unLieu->getLongitude(),
+                'idVille' => $ville->getId(),
+                'nomVille' => $ville->getNom(),
+                'codePostal' => $ville->getCodePostal()
+            ];
+        }
+        return new JsonResponse($list);
+	}
+	
+    #[Route('/sortie/inscription/{id}', name: 'sortie_inscription')]
+    public function inscription(EntityManagerInterface $entityManager,Sorties $sortie,InscriptionsRepository $inscriptionsRepository): Response
+    {  
+        $user = $this->getUser();
+        $date = new DateTime();
+        $listeInscription = $inscriptionsRepository->findBySortie($sortie->getId());
+        $nbinscrit=count($listeInscription);
+        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2 && $nbinscrit+1<=$sortie->getNbInscriptionMax()){
+            $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
+            if ($result == null) {
+                $inscription = new Inscriptions();
+                $inscription->setDateInscription($date);
+                $inscription->setParticipant($user);
+                $inscription->setSorties($sortie);
+                $entityManager->persist($inscription);
+                $entityManager->flush();
+            }
+        }
+        
+        return $this->redirectToRoute("sortie_liste");
+    }
+
+    #[Route('/sortie/desistement/{id}', name: 'sortie_desistement')]
+    public function desistement(EntityManagerInterface $entityManager,Sorties $sortie,InscriptionsRepository $inscriptionsRepository): Response
+    {  
+        $user = $this->getUser();
+        $date = new DateTime();
+        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2){
+            $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
+            if ($result != null) {
+                $entityManager->remove($result);
+                $entityManager->flush();
+            }
+        }
+        
+        return $this->redirectToRoute("sortie_liste");
     }
 }
