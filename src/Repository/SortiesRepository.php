@@ -78,8 +78,8 @@ class SortiesRepository extends ServiceEntityRepository
             }
             else {
                if ($param->get("sortie_insc")==null && $param->get("sortie_n_insc")!=null) {
-                    $query->innerJoin('s.inscriptions', 'i');
-                    $query->andWhere('i.participant != :participant');
+                    $query->leftJoin('s.inscriptions', 'i');
+                    $query->andWhere('i.participant != :participant or i.participant is null');
                     $query->setParameter('participant',$user->getId());
                }
             }

@@ -151,7 +151,9 @@ class SortieController extends AbstractController
     {  
         $user = $this->getUser();
         $date = new DateTime();
-        if($sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2){
+        $listeInscription = $inscriptionsRepository->findBySortie($sortie->getId());
+        $nbinscrit=count($listeInscription);
+        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2 && $nbinscrit+1<=$sortie->getNbInscriptionMax()){
             $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
             if ($result == null) {
                 $inscription = new Inscriptions();
@@ -171,9 +173,12 @@ class SortieController extends AbstractController
     {  
         $user = $this->getUser();
         $date = new DateTime();
-        if($sortie){
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+        if( $sortie->getDateDebut()>=$date &&$sortie->getDateCloture()>=$date && $sortie->getEtat()->getId() == 2){
+            $result=$inscriptionsRepository->findOneByUserSortie($user->getId(),$sortie->getId());
+            if ($result != null) {
+                $entityManager->remove($result);
+                $entityManager->flush();
+            }
         }
         
         return $this->redirectToRoute("sortie_liste");
