@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Sites;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -42,6 +44,16 @@ class UserUpdateType extends AbstractType
             ],'attr' => [
                 'class' => 'form-control mb-1'
             ]])
+            ->add(
+                'sites',
+                EntityType::class, [
+                    'label' => 'Site',
+                    'class' => Sites::class,
+                    'choice_label' => 'nom',
+                    'attr' => [
+                        'class' => 'form-control mb-2'
+                    ]
+                ])
         ;
     }
 
