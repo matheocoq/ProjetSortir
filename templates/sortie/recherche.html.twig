@@ -1,5 +1,5 @@
-<form method="get" name="recherche_sortie">
-    <h4>Filtrer les sorties</h4>
+<form method="get" name="recherche_sortie" class="margin-20">
+    <h4 class="center-div">Filtrer les sorties</h4>
     <div class="div-recherche margin-20">
         <div>
             <div >
@@ -18,10 +18,16 @@
             </div>
 
             <div class="margin-20">
-                <label for="date_debut">Entre</label>
-                <input type="datetime-local" name="date_debut" id="date_debut" value="{{ dateDebut }}">
-                <label for="date_fin">Et</label>
-                <input type="datetime-local" name="date_fin" id="date_fin"  value="{{ dateFin }}">
+                <div class="date-recherche">
+                    <div>
+                        <label for="date_debut">Entre</label>
+                        <input type="datetime-local" name="date_debut" id="date_debut" value="{{ dateDebut }}">
+                    </div>
+                    <div>
+                        <label for="date_fin">Et</label>
+                        <input type="datetime-local" name="date_fin" id="date_fin"  value="{{ dateFin }}">
+                    </div>
+                </div>
                 <div class="alert alert-danger" role="alert" {% if dateValid %} style="display:none;" {% endif %} >La date de début doit être inférieur a la date de fin</div>
             </div>
         </div>

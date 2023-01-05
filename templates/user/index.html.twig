@@ -10,22 +10,30 @@
 
 <div>
     {{ form_start(userForm) }}
-    {% if user.image != null %}
-        <img  class="image-profil" src="/img/utilisateur/{{user.image}}">
-    {% else %}
-        <img src="https://fakeimg.pl/250x250/">
-    {% endif %}
-    {{ form_row(userForm.image) }}
-    {{ form_row(userForm.pseudo) }}
-    {{ form_row(userForm.prenom) }}
-    {{ form_row(userForm.nom) }}
-    {{ form_row(userForm.telephone) }}
-    {{ form_row(userForm.email) }}
-    {{ form_row(userForm.password) }}
-    {{ form_row(userForm._token) }}
-    {{ form_errors(userForm.password) }}
-    <br>
-    <div style="text-align: center">
+    <div class="center-div">
+        <h1>Mon profil</h1>
+    </div>
+    <div class="tableau-user">
+        <div class="center-div margin-20">
+            {% if user.image != null %}
+                <img  class="image-profil margin-20" src="/img/utilisateur/{{user.image}}">
+            {% else %}
+                <img src="https://fakeimg.pl/250x250/">
+            {% endif %}
+        </div>
+        <div style="width: 100%;">
+            {{ form_row(userForm.image) }}
+            {{ form_row(userForm.pseudo) }}
+            {{ form_row(userForm.prenom) }}
+            {{ form_row(userForm.nom) }}
+            {{ form_row(userForm.telephone) }}
+            {{ form_row(userForm.email) }}
+            {{ form_row(userForm.password) }}
+            {{ form_row(userForm._token) }}
+            {{ form_errors(userForm.password) }}
+        </div>
+    </div>
+    <div class="margin-20" style="text-align: center">
         <button class="btn btn-outline-primary">Enregistrer !</button>
     </div>
 

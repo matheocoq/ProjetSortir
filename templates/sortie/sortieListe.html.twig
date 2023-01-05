@@ -39,30 +39,30 @@
             <td>{{ sortie.inscriptions|length }}/{{ sortie.nbInscriptionMax}}</td>
             <td>{{ sortie.etat.libelle}}</td>
             <td>{% if inscrit == true %}X{% endif %}</td>
-            <td><a href="{{ path('user_detail', {id: sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo}}</a></td>
+            <td><a class="text-decoration-none fw-bold link-primary" href="{{ path('user_detail', {id: sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo}}</a></td>
             <td>
                 {% if sortie.organisateur.id == app.user.id %}
                     {% if sortie.dateCloture|date("Y-m-d H:i:s") >= dateDuJour|date("Y-m-d H:i:s") and sortie.dateDebut|date("Y-m-d H:i:s") >= dateDuJour|date("Y-m-d H:i:s") and sortie.etat.id == 1 %} 
-                        <a href="{{ path('sortie_update', {id: sortie.id}) }}">Modifier</a> 
+                        <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_update', {id: sortie.id}) }}">Modifier</a> 
                     {% else %} 
-                        <a href="{{ path('sortie_detail', { 'id': sortie.id }) }}">Afficher</a> 
+                        <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_detail', { 'id': sortie.id }) }}">Afficher</a> 
                         {% if sortie.etat.id == 2 or sortie.etat.id == 3 %}
-                             - <a id="openModalLink" href="#" data-identifiant="{{ sortie.id }}" class="openModalAnnulation">Annuler</a> 
+                             - <a class="text-decoration-none fw-bold link-primary openModalAnnulation" id="openModalLink" href="#" data-identifiant="{{ sortie.id }}" >Annuler</a> 
                         {% endif %}
                     {% endif %}
                     
                     {% if sortie.etat.id == 1 %} 
-                        - <a href="{{ path('sortie_publier', {id: sortie.id}) }}">Publier</a>
+                        - <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_publier', {id: sortie.id}) }}">Publier</a>
                     {% endif %}
 
-                {% else %} <a href="{{ path('sortie_detail', { 'id': sortie.id }) }}">Afficher</a> 
+                {% else %} <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_detail', { 'id': sortie.id }) }}">Afficher</a> 
                     {% if inscrit == true %}
                         {% if sortie.etat.id == 2 and sortie.dateCloture|date("Y-m-d H:i:s") >= dateDuJour|date("Y-m-d H:i:s") and sortie.dateDebut|date("Y-m-d H:i:s") >= dateDuJour|date("Y-m-d H:i:s") %}
-                            - <a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}">Se désister</a> 
+                            - <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_desistement', { 'id': sortie.id }) }}">Se désister</a> 
                         {% endif %}
                     {% else %} 
                         {% if sortie.etat.id == 2 and sortie.dateCloture|date("Y-m-d H:i:s") >= dateDuJour|date("Y-m-d H:i:s") and sortie.dateDebut|date("Y-m-d H:i:s") >= dateDuJour|date("Y-m-d H:i:s") and sortie.inscriptions|length < sortie.nbInscriptionMax %}
-                            - <a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}">S'inscire</a> 
+                            - <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_inscription', { 'id': sortie.id }) }}">S'inscire</a> 
                         {% endif %}
                     {% endif %}
                 {% endif %}
@@ -75,14 +75,14 @@
 
 <div id="modalAnnulation" class="modal">
   <div class="modal-content">
-    <h1>Formulaire d'annulation</h1>
+    <h1>Annuler une sortie</h1>
     <form method="POST" action="http://127.0.0.1:8000/sortie/annuler">
         <p>Motif de l'annulation :</p>
         <textarea id="modal-motif" name="motif" rows="4" cols="50" maxlength="200"></textarea>
         <input type="hidden" id="modal-identifiant" name="identifiant" value="">
         <div class="margin-20">
             <input class="btn btn-primary" type="submit"  name="valider-annulation" value="Valider">
-            <a id="closeModalBtn" onclick="closeModalAnnulation()" class="btn btn-secondary">Close Modal</a>
+            <a id="closeModalBtn" onclick="closeModalAnnulation()" class="btn btn-secondary">Fermer</a>
         </div>
     </form>
   </div>

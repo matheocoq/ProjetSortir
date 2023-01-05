@@ -21,7 +21,7 @@
                         </div>
                         <div class="col">
                             {% if (key == 'Date et heure de la sortie') or (key == 'Date limite d\'inscription') %}
-                                {% set info = info|format_datetime(locale='fr',pattern="EEEE dd MMMM YYYY") %}
+                                {% set info = info|date("Y-m-d H:i:s") %}
                             {% endif %}
                             <input type="text" readonly class="form-control-plaintext" id="{{ key }}" value="{{ info }}">
                         </div>

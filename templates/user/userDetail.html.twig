@@ -10,63 +10,63 @@
 
     <h1 class="text-center mt-3">{{ user.pseudo }}</h1>
 
-    <div class="row mb-5 d-flex">
+    <div class="tableau-user margin-20">
 
-        <div class="col-3 mt-5">
+        <div class="center-div">
             {% if user.image != null %}
-                <img src="/img/utilisateur/{{user.image}}">
+                <img class="image-profil margin-20" src="/img/utilisateur/{{user.image}}">
             {% else %}
                 <img src="https://fakeimg.pl/250x250/">
             {% endif %}
             
         </div>
 
-        <div class="col-8 mt-5">
-            <div class="row justify-content-center mb-3">
-                <div class="col-3">
-                    Prénom:
+        <div class="info-user">
+            <div class="info">
+                <div class="info-user-titre">
+                    <h5>Prénom:</h5>
                 </div>
-                <div class="col-4">
-                    {{ user.prenom }}
-                </div>
-            </div>
-            <div class="row justify-content-center mb-3">
-                <div class="col-3">
-                    Nom:
-                </div>
-                <div class="col-4">
-                    {{ user.nom }}
+                <div class="info-user-contenue">
+                    <h5>{{ user.prenom }}</h5>
                 </div>
             </div>
-            <div class="row justify-content-center mb-3">
-                <div class="col-3">
-                    Téléphone:
+            <div class="info">
+                <div class="info-user-titre">
+                    <h5>Nom:</h5>
                 </div>
-                <div class="col-4">
-                    {{ user.telephone }}
-                </div>
-            </div>
-            <div class="row justify-content-center mb-3">
-                <div class="col-3">
-                    Email:
-                </div>
-                <div class="col-4">
-                    {{ user.email }}
+                <div class="info-user-contenue">
+                    <h5>{{ user.nom }}</h5>
                 </div>
             </div>
-            <div class="row justify-content-center mb-3">
-                <div class="col-3">
-                    Site de rattachement:
+            <div class="info">
+                <div class="info-user-titre">
+                    <h5>Téléphone:</h5>
                 </div>
-                <div class="col-4">
-                    {{ user.sites.nom }}
+                <div class="info-user-contenue">
+                    <h5>{{ user.telephone }}</h5>
+                </div>
+            </div>
+            <div class="info">
+                <div class="info-user-titre">
+                    <h5>Email:</h5>
+                </div>
+                <div class="info-user-contenue">
+                    <h5>{{ user.email }}</h5>
+                </div>
+            </div>
+            <div class="info">
+                <div class="info-user-titre">
+                    <h5>Site de rattachement:</h5>
+                </div>
+                <div class="info-user-contenue">
+                    <h5>{{ user.sites.nom }}</h5>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <div class="row d-flex justify-content-center">
+    <div class="margin-20 row d-flex justify-content-center ">
         <div class="col-2">
             <button class="btn btn-outline-secondary" onclick="javascript:window.history.back()">Retour</button>
         </div>

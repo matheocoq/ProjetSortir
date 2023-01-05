@@ -45,7 +45,10 @@ class UserUpdateType extends AbstractType
                 'class' => 'form-control mb-1'
             ]])
             ->add('image', FileType::class, [
-                'label' => 'Image (png,jpeg file)',
+                'label' => 'Ma photo',
+                'attr' => [
+                    'class' => 'form-control mb-1'
+                ],
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [

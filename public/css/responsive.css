@@ -1,0 +1,45 @@
+@media screen and (max-width: 991px){
+   
+    .tableau-user{
+        grid-gap: 0px;
+        flex-direction: column;
+    }
+
+    .image-profil {
+        width: 150px;
+        max-height: 150px;
+    }
+
+    .info-user{
+        margin-top: 20px;
+    }
+
+    .div-sortie-cree{
+        flex-direction: column;
+    }
+
+    .div-sortie-modif{
+        flex-direction: column;
+    }
+    .bouton-modif{
+        flex-direction: column;
+        grid-gap: 10px;
+    }
+    .div-recherche{
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 500px){
+   
+    .info-user-titre{
+        flex: none;
+        margin-right: 10px;
+    }
+    .info-user-contenue{
+        flex: none;
+    }
+    .info-user .info{
+        justify-content: center;
+    }
+}
