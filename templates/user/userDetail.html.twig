@@ -13,7 +13,12 @@
     <div class="row mb-5 d-flex">
 
         <div class="col-3 mt-5">
-            <img src="https://fakeimg.pl/250x250/">
+            {% if user.image != null %}
+                <img src="/img/utilisateur/{{user.image}}">
+            {% else %}
+                <img src="https://fakeimg.pl/250x250/">
+            {% endif %}
+            
         </div>
 
         <div class="col-8 mt-5">

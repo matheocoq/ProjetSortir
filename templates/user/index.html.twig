@@ -10,7 +10,12 @@
 
 <div>
     {{ form_start(userForm) }}
-
+    {% if user.image != null %}
+        <img  class="image-profil" src="/img/utilisateur/{{user.image}}">
+    {% else %}
+        <img src="https://fakeimg.pl/250x250/">
+    {% endif %}
+    {{ form_row(userForm.image) }}
     {{ form_row(userForm.pseudo) }}
     {{ form_row(userForm.prenom) }}
     {{ form_row(userForm.nom) }}

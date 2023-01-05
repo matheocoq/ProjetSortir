@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class UserUpdateType extends AbstractType
 {
@@ -42,6 +44,19 @@ class UserUpdateType extends AbstractType
             ],'attr' => [
                 'class' => 'form-control mb-1'
             ]])
+            ->add('image', FileType::class, [
+                'label' => 'Image (png,jpeg file)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            'image/*',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid picture document',
+                    ])
+                ],
+            ])
         ;
     }
 
