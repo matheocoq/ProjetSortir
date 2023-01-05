@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="text-center">Création d'un utilisateur</h1>
+
+    {{ form_start(userForm) }}
+    {{ form_widget(userForm) }}
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-1 d-flex justify-content-center">
+            <button type="submit" class="btn btn-outline-primary">Valider</button>
+        </div>
+    </div>
+
+    {{ form_end(userForm) }}
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
