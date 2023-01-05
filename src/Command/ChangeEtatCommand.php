@@ -69,7 +69,6 @@ class ChangeEtatCommand extends Command
                 $this->entityManager->persist($sortie);
                 $this->entityManager->flush();
                 $message = $sortie->getId() . " " . $sortie->getNom() . " : statut changé en closed";
-                //écrit le message dans la console
                 $io->writeln($message);
                 continue;
             }
@@ -80,7 +79,6 @@ class ChangeEtatCommand extends Command
                 $this->entityManager->persist($sortie);
                 $this->entityManager->flush();
                 $message = $sortie->getId() . " " . $sortie->getNom() . " : statut changé en closed";
-                //écrit le message dans la console
                 $io->writeln($message);
                 continue;
             }
@@ -91,7 +89,6 @@ class ChangeEtatCommand extends Command
                 $this->entityManager->persist($sortie);
                 $this->entityManager->flush();
                 $message = $sortie->getId() . " " . $sortie->getNom() . " : statut changé en closed";
-                //écrit le message dans la console
                 $io->writeln($message);
                 continue;
             }
