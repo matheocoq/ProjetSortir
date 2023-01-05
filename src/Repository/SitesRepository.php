@@ -40,7 +40,17 @@ class SitesRepository extends ServiceEntityRepository
         }
     }
 
-
+    public function findByName($site): ?Sites
+    {
+        $test = $this->createQueryBuilder('s')
+        ->andWhere('s.nom = :site')
+        ->setParameter('site', $site)
+        ->getQuery()
+        ->getOneOrNullResult()
+        ;
+        dump($test);
+        return $test;
+    }
 
 //    /**
 //     * @return Sites[] Returns an array of Sites objects
