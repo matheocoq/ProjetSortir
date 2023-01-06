@@ -109,7 +109,7 @@ class UserController extends AbstractController
         ]);
     }
     #[Route('/user/upload', name: 'user_upload')]
-    public function importAction(Request $request,EntityManagerInterface $entityManager,SitesRepository $sitesRepository,UserPasswordHasherInterface $userPasswordHasher)
+    public function importAction(Request $request,EntityManagerInterface $entityManager,SitesRepository $sitesRepository,UserPasswordHasherInterface $userPasswordHasher,UserRepository $userRepository)
     {
         $form = $this->createForm(ImportUsersType::class);
         $form->handleRequest($request);
@@ -128,22 +128,26 @@ class UserController extends AbstractController
             );
 
             // Read the CSV file and do something with the data
-            $csv = array_map('str_getcsv', file('upload'.'/'.$fileName));
-
+            $csv = array_map(function($v){return str_getcsv($v, ";");}, file('upload'.'/'.$fileName));
+            dump($csv);
             foreach ($csv as &$ligne) {
                 if($i == 0) {
                     $i++;
                     continue;
                 }
-
-                $separer = explode(";",$ligne[0]);
-                dump(count($separer));
+                dump($ligne);
+                $separer = $ligne;
                 if(count($separer) != 7){
                     $i++;
                     $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Veuillez vérifier les informations de l'utilisateur.";
                     continue;
                 }
-                $user = new User();
+                $user = $userRepository->findOneBy(array('pseudo' => $separer[4]));
+                if($user == null) {
+                    dump('Aucun user trouver avec ce pseudo, on en créer un nouveau');
+                    $user = new User();
+                }
+                dump($user);
                 $user->setEmail($separer[0]);
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -155,7 +159,7 @@ class UserController extends AbstractController
                 $user->setPrenom($separer[3]);
                 $user->setPseudo($separer[4]);
                 $user->setTelephone($separer[5]);
-
+                dump($separer[6]);
                 $siteObj = $sitesRepository->findByName($separer[6]);
 
                 $user->setSites($siteObj);
