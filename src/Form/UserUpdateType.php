@@ -53,17 +53,7 @@ class UserUpdateType extends AbstractType
                 new Regex('^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$^')
             ],'attr' => [
                 'class' => 'form-control mb-1'
-            ]]) 
-            ->add(
-                'sites',
-                EntityType::class, [
-                    'label' => 'Site',
-                    'class' => Sites::class,
-                    'choice_label' => 'nom',
-                    'attr' => [
-                        'class' => 'form-control mb-2'
-                    ]
-                ])
+            ]])
             ->add('image', FileType::class, [
                 'label' => 'Ma photo',
                 'attr' => [
