@@ -12,27 +12,111 @@
 
         <h1 class="text-center mt-3">Detail de la sortie</h1>
 
-        <div class="d-flex mt-5 mb-3 row">
-            {% for key, info in infos %}
-                <div class="col-6 mb-2">
-                    <div class="row">
-                        <div class="col">
-                            <label for="{{ key }}" class="form-label">{{ key }}:</label>
-                        </div>
-                        <div class="col">
-                            {% if (key == 'Date et heure de la sortie') or (key == 'Date limite d\'inscription') %}
-                                {% set info = info|date("Y-m-d H:i:s") %}
-                            {% endif %}
-                            <input type="text" readonly class="form-control-plaintext" id="{{ key }}" value="{{ info }}">
-                        </div>
+        <div class="sortie-detail-tableau margin-30">
+            <div class="sortie-detail-tableau-col1">
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Nom de la sortie:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.nom }}</h5>
                     </div>
                 </div>
-            {% endfor %}
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Date et heure de la sortie:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.dateDebut|date("Y-m-d H:i:s") }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Date limite d'inscription:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.dateCloture|date("Y-m-d H:i:s") }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Nombre de place:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.nbInscriptionMax }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Durée:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.duree }} min</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Description et infos:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.description }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="sortie-detail-tableau-col2">
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Lieu:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.lieux.nom }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Rue:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.lieux.rue }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Ville:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.lieux.ville.nom }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Code postal:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.lieux.ville.codePostal }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Latitude:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.lieux.latitude }}</h5>
+                    </div>
+                </div>
+                <div class="sortie-detail">
+                    <div class="info-sortie-titre">
+                        <h5>Longitude:</h5>
+                    </div>
+                    <div class="info-sortie-contenue">
+                        <h5>{{ sortie.lieux.longitude }}</h5>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
 
-    <table class="table table-hover">
+    <table class="table table-hover margin-30">
         <thead class="thead-light">
             <tr>
                 <th>Pseudo</th>

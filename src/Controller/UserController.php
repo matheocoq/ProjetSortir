@@ -123,12 +123,12 @@ class UserController extends AbstractController
             // Move the file to the directory where CSV files are stored
             $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
             $file->move(
-                'public/upload',
+                'upload',
                 $fileName
             );
 
             // Read the CSV file and do something with the data
-            $csv = array_map(function($v){return str_getcsv($v, ";");}, file('public/upload'.'/'.$fileName));
+            $csv = array_map(function($v){return str_getcsv($v, ";");}, file('upload'.'/'.$fileName));
             dump($csv);
             foreach ($csv as &$ligne) {
                 if($i == 0) {
