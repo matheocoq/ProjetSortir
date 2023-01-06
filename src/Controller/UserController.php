@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ImportUsersType;
+use App\Form\UserCreateType;
 use App\Form\UserUpdateType;
 use App\Repository\SitesRepository;
 use App\Repository\UserRepository;
@@ -72,10 +73,10 @@ class UserController extends AbstractController
     public function create(Request $request,UserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager,UserRepository $userRepository): Response {
 
         $user = new User();
-        $userForm = $this->createForm(UserUpdateType::class, $user);
+        $userForm = $this->createForm(UserCreateType::class, $user);
         $userForm->handleRequest($request);
 
-        if($userForm->isSubmitted()){
+        if($userForm->isSubmitted() && $userForm->isValid()){
             if($userForm->get('password')->getData() != null) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
