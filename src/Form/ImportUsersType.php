@@ -12,7 +12,11 @@ class ImportUsersType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('file', FileType::class,['label' => 'Cliquer ici pour téléverser un fichier aves les utilisateurs à créer : '])
+            ->add('file', FileType::class,['label' => 'Cliquer ici pour téléverser un fichier aves les utilisateurs à créer : '
+                , 'attr' => [
+                    'class' => 'form-control mb-1'
+                ],],
+        )
         ;
     }
 

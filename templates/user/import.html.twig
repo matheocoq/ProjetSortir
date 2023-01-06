@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div>
+    <div class="center-middle-screen margin-30" >
         {{ form_start(Importform) }}
-    <div style="text-align: center">
-        <button class="btn btn-outline-primary">Enregistrer !</button>
-    </div>
+        {{ form_widget(Importform) }}
+        <div style="text-align: center">
+            <button class="btn btn-outline-primary margin-20">Enregistrer !</button>
+        </div>
         {{ form_end(Importform) }}
     </div>
 {% endblock %}
