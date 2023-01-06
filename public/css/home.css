@@ -171,3 +171,7 @@
     overflow-x: auto;
     white-space: nowrap;
 }
+
+.info-participant-resp{
+    display: none;
+}

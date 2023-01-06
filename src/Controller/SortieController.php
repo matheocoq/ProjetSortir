@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Inscriptions;
 use App\Entity\Sorties;
+use App\Entity\User;
 use App\Form\SortiesType;
 use App\Repository\EtatsRepository;
 use App\Repository\InscriptionsRepository;
@@ -26,10 +27,10 @@ class SortieController extends AbstractController
     #[Route('/sortie/liste', name: 'sortie_liste')]
     public function liste(SitesRepository $sitesRepository,SortiesRepository $sortiesRepository,Request $request): Response
     {  
-        
+        $user = $this->getUser();
     
         $dateDuJour =date("Y-m-d H:i:s");
-        
+        $sortiesEtablissement = $sortiesRepository->findByNonClosEtablissement($user->getSites()->getId());
         $sorties = $sortiesRepository->findByNonClos();
         $sites= $sitesRepository->findAll();
         $siteRechercher="";
@@ -77,6 +78,7 @@ class SortieController extends AbstractController
         }
         return $this->render('sortie/sortieListe.html.twig', [
             'sorties' => $sorties,
+            'sortiesEtablissement' => $sortiesEtablissement,
             'sites' => $sites,
             'siteRechercher' =>$siteRechercher,
             'contient' =>$contient,

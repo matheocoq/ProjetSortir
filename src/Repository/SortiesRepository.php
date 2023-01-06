@@ -58,6 +58,24 @@ class SortiesRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByNonClosEtablissement($id): array
+    {
+        $today = date("Y-m-d H:i:s ");
+        $timestamp = strtotime($today);
+        $nextMonth = strtotime("last month", $timestamp);
+        $nextMonthDate = date("Y-m-d H:i:s", $nextMonth);
+        return $this->createQueryBuilder('s')
+            ->innerJoin('s.organisateur', 'o')
+            ->andWhere("s.date_debut >= :mois_plus_un")
+            ->setParameter('mois_plus_un',$nextMonthDate)
+            ->andWhere('o.sites = :site')
+            ->setParameter('site',$id)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
     /**
      * @return Sorties[] Returns an array of Sorties objects
      */

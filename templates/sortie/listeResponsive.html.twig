@@ -1,0 +1,18 @@
+<table class="table margin-30 tableau-liste-sortie">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Nom de la sortie</th>
+            <th scope="col">Date de la sortie</th>
+            <th scope="col">Lieu</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for sortie in sorties %}
+         <tr>
+            <td><a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_detail', { 'id': sortie.id }) }}">{{ sortie.nom}}</a></td>
+            <td>{{ sortie.dateDebut|date("Y-m-d H:i:s")}}</td>
+            <td>{{ sortie.lieux.nom}}</td>
+        </tr>
+    {% endfor %}  
+    </tbody>
+</table>
