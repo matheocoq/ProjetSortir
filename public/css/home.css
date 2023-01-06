@@ -99,7 +99,8 @@
 .info-user .info{
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 
@@ -109,11 +110,14 @@
 }
 
 .info-user-titre{
-    flex: 1 0 0%;
+    margin-right: 10px;
+    color: black; 
 }
-
+.info-user-titre h5{
+    font-weight: bold;
+}
 .info-user-contenue{
-    flex: 1 0 0%;
+    color: rgb(39, 39, 39);
 }
 
 .date-recherche{
@@ -122,4 +126,48 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+}
+
+.sortie-detail-tableau{
+    display: flex;
+    grid-gap: 30px;
+    flex-direction: row;
+}
+
+.sortie-detail-tableau-col1{
+    display: flex;
+    grid-gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.sortie-detail-tableau-col2{
+    display: flex;
+    grid-gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.sortie-detail{
+    display: flex;
+}
+
+.info-sortie-titre{
+    margin-right: 10px;
+    color: black; 
+}
+
+.info-sortie-titre h5{
+    font-weight: bold;
+}
+.info-sortie-contenue{
+    color: rgb(39, 39, 39);
+}
+
+.tableau-liste-sortie{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }
