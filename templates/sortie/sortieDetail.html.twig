@@ -126,7 +126,8 @@
         <tbody>
         {% for inscription in sortie.inscriptions %}
             <tr>
-                <td><a href="{{ path('user_detail', {id: inscription.participant.id}) }}" class="text-decoration-none fw-bold text-dark link-primary">{{ inscription.participant.pseudo }}</a> </td>
+                <td class="info-participant-resp">{{ inscription.participant.pseudo }}</td>
+                <td class="info-participant"><a href="{{ path('user_detail', {id: inscription.participant.id}) }}" class="text-decoration-none fw-bold text-dark link-primary">{{ inscription.participant.pseudo }}</a> </td>
                 <td>{{ inscription.participant.nom }} {{ inscription.participant.prenom }}</td>
             </tr>
         {% endfor %}

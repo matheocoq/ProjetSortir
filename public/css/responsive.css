@@ -58,4 +58,24 @@
     .info-user .info{
         justify-content: center;
     }
+
+    .div-recherche-sortie{
+        display: none;
+    }
+
+    .bouton-cree-sortie{
+        display: none !important;
+    }
+
+    .div-liste-sortie{
+        display: none ;
+    }
+
+    .info-participant-resp{
+        display: block;
+    }
+
+    .info-participant{
+        display: none;
+    }
 }

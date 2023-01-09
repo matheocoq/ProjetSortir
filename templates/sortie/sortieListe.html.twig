@@ -8,9 +8,11 @@
 
 <script src="{{ asset('js/modal.js') }}" defer></script>
 
+<div class="div-recherche-sortie">
 {% include 'sortie/recherche.html.twig' %}
+</div>
 
-
+<div class="div-liste-sortie">
 <table class="table margin-30 tableau-liste-sortie">
     <thead class="thead-light">
         <tr>
@@ -71,8 +73,12 @@
     {% endfor %}  
     </tbody>
 </table>
-<a class="btn btn-primary" href="{{ path('sortie_create')}}">Créer une sortie</a>
+</div>
+<a class="btn btn-primary bouton-cree-sortie" href="{{ path('sortie_create')}}">Créer une sortie</a>
 
+<div class="div-liste-sortie-responsive">
+    {% include 'sortie/listeResponsive.html.twig' %}
+</div>
 <div id="modalAnnulation" class="modal">
   <div class="modal-content">
     <h1>Annuler une sortie</h1>
