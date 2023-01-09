@@ -78,4 +78,8 @@
     .info-participant{
         display: none;
     }
+
+    .div-liste-sortie-responsive{
+        display: block;
+    }
 }
