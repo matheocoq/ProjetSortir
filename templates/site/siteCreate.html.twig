@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+
+    <h1 class="text-center">Création d'un lieux </h1>
+
+    {{ form_start(siteForm) }}
+    {{ form_widget(siteForm) }}
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-1 d-flex justify-content-center">
+            <button type="submit" class="btn btn-outline-primary">Valider</button>
+        </div>
+    </div>
+
+    {{ form_end(siteForm) }}
+
+{% endblock %}

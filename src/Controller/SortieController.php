@@ -267,23 +267,24 @@ class SortieController extends AbstractController
     public function annuler(EntityManagerInterface $entityManager,EtatsRepository $etatsRepository,Request $request,SortiesRepository $sortiesRepository): Response
     {  
         $user = $this->getUser();
-        $messageSucces = '';
+        
         if ($request->get("valider-annulation") != null && $request->get("identifiant") != null && $request->get("identifiant") != "" && $request->get("motif") != null) {
 
             $sortie= $sortiesRepository->find($request->get("identifiant"));
 
-            if( $sortie != null && ($sortie->getEtat()->getId() == 2 || $sortie->getEtat()->getId() == 3 )&& $sortie->getOrganisateur()->getId() == $user->getId()){
+            if( $sortie != null && ($sortie->getEtat()->getId() == 2 || $sortie->getEtat()->getId() == 3 )&& ($sortie->getOrganisateur()->getId() == $user->getId() || $user->isAdministrateur() == true)){
                 $etat=$etatsRepository->find(6);
                 $sortie->setEtat($etat);
                 $sortie->setDescription($request->get("motif"));
                 $entityManager->persist($sortie);
                 $entityManager->flush();
                 $messageSucces = 'Sortie annuled !';
+                $this->addFlash('succes', $messageSucces);
             }
 
         }
 
-        $this->addFlash('succes', $messageSucces);
+       
         return $this->redirectToRoute("sortie_liste");
     }
 
