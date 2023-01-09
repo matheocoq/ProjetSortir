@@ -49,7 +49,7 @@
                     {% else %} 
                         <a class="text-decoration-none fw-bold link-primary" href="{{ path('sortie_detail', { 'id': sortie.id }) }}">Afficher</a> 
                         {% if sortie.etat.id == 2 or sortie.etat.id == 3 %}
-                             - <a class="text-decoration-none fw-bold link-primary openModalAnnulation" id="openModalLink" href="#" data-identifiant="{{ sortie.id }}" >Annuler</a> 
+                             - <a class="text-decoration-none fw-bold link-primary openModalAnnulation" id="openModalLink" href="#" data-identifiant="{{ sortie.id }}" >Annuler</a>
                         {% endif %}
                     {% endif %}
                     
@@ -82,7 +82,7 @@
 <div id="modalAnnulation" class="modal">
   <div class="modal-content">
     <h1>Annuler une sortie</h1>
-    <form method="POST" action="http://127.0.0.1:8000/sortie/annuler">
+    <form method="POST" action="{{ path('sortie_annuler') }}">
         <p>Motif de l'annulation :</p>
         <textarea id="modal-motif" name="motif" rows="4" cols="50" maxlength="200"></textarea>
         <input type="hidden" id="modal-identifiant" name="identifiant" value="">
