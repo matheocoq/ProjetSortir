@@ -1,7 +1,8 @@
 $( ".openModalAnnulation" ).click(function() {
     var modal = document.getElementById("modalAnnulation");
-    console.log()
     document.getElementById("modal-identifiant").value = $(this).data("identifiant")
+    console.log($(this).data("nom"))
+    document.getElementById("modal-nom").innerHTML = "Annuler la sortie "+$(this).data("nom")
     modal.style.display = "block";
 });
 
