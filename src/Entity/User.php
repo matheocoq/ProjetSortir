@@ -51,10 +51,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Sites $sites = null;
 
-    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sorties::class)]
+    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sorties::class, fetch: "EAGER")]
     private Collection $organisations;
 
-    #[ORM\OneToMany(mappedBy: 'participant', targetEntity: Inscriptions::class)]
+    #[ORM\OneToMany(mappedBy: 'participant', targetEntity: Inscriptions::class, fetch: "EAGER")]
     private Collection $inscriptions;
 
     #[ORM\Column(length: 255, nullable: true)]
