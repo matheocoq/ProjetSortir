@@ -50,7 +50,12 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         return new Passport(
             new UserBadge($identifiant,function (string $userIdentifier) {
-        return $this->userRepository->loadUserByUsername($userIdentifier);
+            $user = $this->userRepository->loadUserByUsername($userIdentifier);
+            if ($user->isActif()) {
+                return $user;
+            } else {
+                return null;
+            }
         }),
             new PasswordCredentials($request->request->get('password', '')),
             [
