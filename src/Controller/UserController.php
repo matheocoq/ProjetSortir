@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use App\Entity\User;
 use App\Form\ImportUsersType;
 use App\Form\UserCreateType;
@@ -137,6 +138,8 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(ImportUsersType::class);
         $form->handleRequest($request);
+        $emailConstraint = new EmailConstraint();
+        $emailConstraint->message = 'Your customized error message';
 
         $arrayOfErrrors = [];
         $i =0;
@@ -173,6 +176,11 @@ class UserController extends AbstractController
                         $user = new User();
                     }
                     dump($user);
+                    if (!filter_var($separer[0], FILTER_VALIDATE_EMAIL)) {
+                        $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Le format de l'email n'est pas bon.";
+                        $i++;
+                        continue;
+                    }
                     $user->setEmail($separer[0]);
                     $user->setPassword(
                         $userPasswordHasher->hashPassword(
@@ -183,6 +191,11 @@ class UserController extends AbstractController
                     $user->setNom($separer[2]);
                     $user->setPrenom($separer[3]);
                     $user->setPseudo($separer[4]);
+                    if(!preg_match('/^[0-9]{10}+$/', $separer[5])) {
+                        $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Le format du numéro de téléphone n'est pas bon.";
+                        $i++;
+                        continue;
+                    }
                     $user->setTelephone($separer[5]);
                     dump($separer[6]);
                     $siteObj = $sitesRepository->findByName($separer[6]);
