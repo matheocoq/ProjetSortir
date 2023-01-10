@@ -131,6 +131,12 @@
                 <td>{{ inscription.participant.nom }} {{ inscription.participant.prenom }}</td>
             </tr>
         {% endfor %}
+            {% if sortie.inscriptions|length == 0 %}
+             <tr>
+                <td style="text-align: center;"colspan="2">Aucun Inscrit</td>
+            </tr>
+            {% endif %}
+            
         </tbody>
     </table>
 
