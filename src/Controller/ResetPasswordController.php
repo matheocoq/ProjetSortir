@@ -46,7 +46,6 @@ class ResetPasswordController extends AbstractController
                 $translator
             );
         }
-        dump(" apres form valid");
         return $this->render('reset_password/request.html.twig', [
             'requestForm' => $form->createView(),
         ]);
@@ -130,7 +129,7 @@ class ResetPasswordController extends AbstractController
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
-        dump("test");
+
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
@@ -156,9 +155,9 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('Papercut@user.com', 'Mail reset'))
+            ->from(new Address('Papercut@user.com', 'Mail de réinitialiser'))
             ->to($user->getEmail())
-            ->subject('Your password reset request')
+            ->subject('Votre de demande de réinitialiser de mot de passe')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
@@ -166,17 +165,7 @@ class ResetPasswordController extends AbstractController
         ;
 
 
-        
-
-        $headers[] = 'MIME-Version: 1.0';
-        $headers[] = 'Content-type: text/html; charset=UTF-8';
-        $message = "<h1>Hi!</h1>";
-        $message .= "<p>To reset your password, please visit the following link</p>";
-        $message .= "<a href=\"{{ url('app_reset_password', {token: resetToken.token}) }}\">{{ url('app_reset_password', {token: resetToken.token}) }}</a>";
-        $message .= "<p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>";
-        $message .= "<p>Cheers!</p>";
-        mail($user->getEmail(), "Réinitialiser",$message);
-
+        $mailer->send($email);
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
