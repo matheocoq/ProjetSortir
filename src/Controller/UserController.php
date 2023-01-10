@@ -155,47 +155,51 @@ class UserController extends AbstractController
             $csv = array_map(function($v){return str_getcsv($v, ";");}, file('upload'.'/'.$fileName));
             dump($csv);
             foreach ($csv as &$ligne) {
-                if($i == 0) {
+                try {
+                    if ($i == 0) {
+                        $i++;
+                        continue;
+                    }
+                    dump($ligne);
+                    $separer = $ligne;
+                    if (count($separer) != 7) {
+                        $i++;
+                        $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Veuillez vérifier les informations de l'utilisateur.";
+                        continue;
+                    }
+                    $user = $userRepository->findOneBy(array('pseudo' => $separer[4]));
+                    if ($user == null) {
+                        dump('Aucun user trouver avec ce pseudo, on en créer un nouveau');
+                        $user = new User();
+                    }
+                    dump($user);
+                    $user->setEmail($separer[0]);
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $separer[1]
+                        )
+                    );
+                    $user->setNom($separer[2]);
+                    $user->setPrenom($separer[3]);
+                    $user->setPseudo($separer[4]);
+                    $user->setTelephone($separer[5]);
+                    dump($separer[6]);
+                    $siteObj = $sitesRepository->findByName($separer[6]);
+
+                    $user->setSites($siteObj);
+
+                    $entityManager->persist($user);
+                    $entityManager->flush();
                     $i++;
-                    continue;
-                }
-                dump($ligne);
-                $separer = $ligne;
-                if(count($separer) != 7){
-                    $i++;
+                }catch (\Exception $e){
                     $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Veuillez vérifier les informations de l'utilisateur.";
-                    continue;
                 }
-                $user = $userRepository->findOneBy(array('pseudo' => $separer[4]));
-                if($user == null) {
-                    dump('Aucun user trouver avec ce pseudo, on en créer un nouveau');
-                    $user = new User();
-                }
-                dump($user);
-                $user->setEmail($separer[0]);
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        $separer[1]
-                    )
-                );
-                $user->setNom($separer[2]);
-                $user->setPrenom($separer[3]);
-                $user->setPseudo($separer[4]);
-                $user->setTelephone($separer[5]);
-                dump($separer[6]);
-                $siteObj = $sitesRepository->findByName($separer[6]);
-
-                $user->setSites($siteObj);
-
-                $entityManager->persist($user);
-                $entityManager->flush();
-                $i++;
             }
         }
         dump($arrayOfErrrors);
         foreach ($arrayOfErrrors as &$errror) {
-            $this->addFlash("info", $errror);
+            $this->addFlash("danger", $errror);
         }
         return $this->render('user/import.html.twig', [
             'Importform' => $form->createView(),
