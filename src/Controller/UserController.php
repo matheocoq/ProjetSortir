@@ -109,7 +109,7 @@ class UserController extends AbstractController
             }
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('succes', 'Utilistauer crée !');
+            $this->addFlash('success', 'Utilistauer crée !');
             return $this->redirectToRoute('user_create');
         }
 
@@ -195,7 +195,7 @@ class UserController extends AbstractController
         }
         dump($arrayOfErrrors);
         foreach ($arrayOfErrrors as &$errror) {
-            $this->addFlash("notice", $errror);
+            $this->addFlash("info", $errror);
         }
         return $this->render('user/import.html.twig', [
             'Importform' => $form->createView(),

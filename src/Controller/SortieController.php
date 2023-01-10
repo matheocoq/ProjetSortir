@@ -112,7 +112,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $this->addFlash('succes', 'Sortie added !');
+            $this->addFlash('success', 'Sortie added !');
             return $this->redirectToRoute('sortie_liste');
         }
 
@@ -146,7 +146,7 @@ class SortieController extends AbstractController
         
             $entityManager->flush();
 
-            $this->addFlash('succes', $messageSucces);
+            $this->addFlash('success', $messageSucces);
             return $this->redirectToRoute('sortie_liste');
         }
 
@@ -211,7 +211,7 @@ class SortieController extends AbstractController
         else{
             $messageSucces = 'erreur inscription';
         }
-        $this->addFlash('succes', $messageSucces);
+        $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
     }
 
@@ -229,7 +229,7 @@ class SortieController extends AbstractController
                 $messageSucces = 'Vous êtes bien d\'ésinscrit !';
             }
         }
-        $this->addFlash('succes', $messageSucces);
+        $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
     }
 
@@ -245,7 +245,7 @@ class SortieController extends AbstractController
             $entityManager->flush();
             $messageSucces = 'Sortie publied !';
         }
-        $this->addFlash('succes', $messageSucces);
+        $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
     }
 
@@ -259,7 +259,7 @@ class SortieController extends AbstractController
             $entityManager->flush();
             $messageSucces = 'Sortie deleted !';
         }
-        $this->addFlash('succes', $messageSucces);
+        $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
     }
 
@@ -279,7 +279,7 @@ class SortieController extends AbstractController
                 $entityManager->persist($sortie);
                 $entityManager->flush();
                 $messageSucces = 'Sortie annuled !';
-                $this->addFlash('succes', $messageSucces);
+                $this->addFlash('success', $messageSucces);
             }
 
         }

@@ -33,7 +33,7 @@ class LieuxController extends AbstractController
         if($lieuxForm->isSubmitted() && $lieuxForm->isValid()){
             $entityManager->persist($lieu);
             $entityManager->flush();
-            $this->addFlash('succes', 'lieux crée !');
+            $this->addFlash('success', 'lieux crée !');
             return $this->redirectToRoute('lieux_liste');
         }
 
@@ -54,7 +54,7 @@ class LieuxController extends AbstractController
         if($lieuxForm->isSubmitted() && $lieuxForm->isValid()){
             $entityManager->persist($lieu);
             $entityManager->flush();
-            $this->addFlash('succes', 'lieux modifier !');
+            $this->addFlash('success', 'lieux modifier !');
             return $this->redirectToRoute('lieux_liste');
         }
         
@@ -78,10 +78,10 @@ class LieuxController extends AbstractController
         if($trouver==false){
             $entityManager->remove($lieux);
             $entityManager->flush();
-            $this->addFlash('succes', 'lieu supprimer !');
+            $this->addFlash('success', 'lieu supprimer !');
         }
         else{
-            $this->addFlash('error', 'le lieu ne peut pas être supprimer !');
+            $this->addFlash('danger', 'le lieu ne peut pas être supprimer !');
         }
        
         return $this->redirectToRoute("lieux_liste");

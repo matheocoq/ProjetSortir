@@ -89,7 +89,7 @@
     <h1>Annuler une sortie</h1>
     <form method="POST" action="http://127.0.0.1:8000/sortie/annuler">
         <p>Motif de l'annulation :</p>
-        <textarea id="modal-motif" name="motif" rows="4" cols="50" maxlength="200"></textarea>
+        <textarea required id="modal-motif" name="motif" rows="4" cols="50" maxlength="200"></textarea>
         <input type="hidden" id="modal-identifiant" name="identifiant" value="">
         <div class="margin-20">
             <input class="btn btn-primary" type="submit"  name="valider-annulation" value="Valider">
