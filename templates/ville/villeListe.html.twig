@@ -22,7 +22,7 @@
             <td>{{ ville.codePostal}}</td>
             <td>
                 <a class="text-decoration-none fw-bold link-primary margin-right" href="{{ path('ville_update', {id: ville.id}) }}">Modifier</a>
-                <a class="text-decoration-none fw-bold link-primary" href="{{ path('lieux_delete', { 'id': ville.id }) }}">Supprimer</a>     
+                <a class="text-decoration-none fw-bold link-primary" href="{{ path('ville_delete', { 'id': ville.id }) }}">Supprimer</a>     
             </td>
         </tr>
     {% endfor %}  

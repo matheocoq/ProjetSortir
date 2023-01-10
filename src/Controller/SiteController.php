@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Sites;
 use App\Form\SitesType;
 use App\Repository\SitesRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,11 +66,25 @@ class SiteController extends AbstractController
     }
 
     #[Route('/site/delete/{id}', name: 'site_delete')]
-    public function delete(SitesRepository $sitesRepository,Lieux $lieux): Response
+    public function delete(EntityManagerInterface $entityManager,UserRepository $userRepository,Sites $site): Response
     {
        
-        return $this->render('lieux/lieuxListe.html.twig', [
-            'site' => $site,
-        ]);
+        $trouver =false;
+        $users=$userRepository->findAll();
+        foreach ($users as $user) {
+            if ($user->getSites()->getId()==$site->getId()) {
+                $trouver=true;
+            }
+        }
+        if($trouver==false){
+            $entityManager->remove($site);
+            $entityManager->flush();
+            $this->addFlash('succes', 'site supprimer !');
+        }
+        else{
+            $this->addFlash('error', 'le site ne peut pas être supprimer !');
+        }
+       
+        return $this->redirectToRoute("site_liste");
     }
 }

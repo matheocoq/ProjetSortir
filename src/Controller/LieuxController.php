@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lieux;
 use App\Form\LieuxType;
 use App\Repository\LieuxRepository;
+use App\Repository\SortiesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,11 +65,25 @@ class LieuxController extends AbstractController
     }
 
     #[Route('/lieux/delete/{id}', name: 'lieux_delete')]
-    public function delete(LieuxRepository $lieuxRepository,Lieux $lieux): Response
+    public function delete(EntityManagerInterface $entityManager,SortiesRepository $sortiesRepository,Lieux $lieux): Response
     {
         
-        return $this->render('lieux/lieuxListe.html.twig', [
-            'lieux' => $lieux,
-        ]);
+        $trouver =false;
+        $sortis=$sortiesRepository->findAll();
+        foreach ($sortis as $sorti) {
+            if ($sorti->getLieux()->getId()==$lieux->getId()) {
+                $trouver=true;
+            }
+        }
+        if($trouver==false){
+            $entityManager->remove($lieux);
+            $entityManager->flush();
+            $this->addFlash('succes', 'lieu supprimer !');
+        }
+        else{
+            $this->addFlash('error', 'le lieu ne peut pas être supprimer !');
+        }
+       
+        return $this->redirectToRoute("lieux_liste");
     }
 }

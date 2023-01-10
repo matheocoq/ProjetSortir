@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ville;
 use App\Form\VilleType;
+use App\Repository\LieuxRepository;
 use App\Repository\VilleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,14 +66,24 @@ class VilleController extends AbstractController
     }
 
     #[Route('/ville/delete/{id}', name: 'ville_delete')]
-    public function delete(VilleRepository $villeRepository,Ville $ville): Response
+    public function delete(EntityManagerInterface $entityManager,VilleRepository $villeRepository,Ville $ville,LieuxRepository $lieuxRepository): Response
     {
-        $user = $this->getUser();
-        $messageSucces = '';
-        if($user->getId()){
-            
+        $trouver =false;
+        $lieux=$lieuxRepository->findAll();
+        foreach ($lieux as $lieu) {
+            if ($lieu->getVille()->getId()==$ville->getId()) {
+                $trouver=true;
+            }
         }
-        $this->addFlash('succes', $messageSucces);
-        return $this->redirectToRoute("sortie_liste");
+        if($trouver==false){
+            $entityManager->remove($ville);
+            $entityManager->flush();
+            $this->addFlash('succes', 'ville supprimer !');
+        }
+        else{
+            $this->addFlash('error', 'la ville ne peut pas être supprimer !');
+        }
+       
+        return $this->redirectToRoute("ville_liste");
     }
 }
