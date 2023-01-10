@@ -109,7 +109,7 @@ class UserController extends AbstractController
             }
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('succes', 'Utilistauer crée !');
+            $this->addFlash('success', 'Utilistauer crée !');
             return $this->redirectToRoute('user_create');
         }
 

@@ -34,7 +34,7 @@ class SiteController extends AbstractController
         if($siteForm->isSubmitted() && $siteForm->isValid()){
             $entityManager->persist($site);
             $entityManager->flush();
-            $this->addFlash('succes', 'site modifier !');
+            $this->addFlash('success', 'site modifier !');
             return $this->redirectToRoute('site_liste');
         }
         
@@ -55,7 +55,7 @@ class SiteController extends AbstractController
         if($siteForm->isSubmitted() && $siteForm->isValid()){
             $entityManager->persist($site);
             $entityManager->flush();
-            $this->addFlash('succes', 'site modifier !');
+            $this->addFlash('success', 'site modifier !');
             return $this->redirectToRoute('site_liste');
         }
         
@@ -79,10 +79,10 @@ class SiteController extends AbstractController
         if($trouver==false){
             $entityManager->remove($site);
             $entityManager->flush();
-            $this->addFlash('succes', 'site supprimer !');
+            $this->addFlash('success', 'site supprimer !');
         }
         else{
-            $this->addFlash('error', 'le site ne peut pas être supprimer !');
+            $this->addFlash('danger', 'le site ne peut pas être supprimer !');
         }
        
         return $this->redirectToRoute("site_liste");

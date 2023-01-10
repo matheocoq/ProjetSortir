@@ -35,7 +35,7 @@ class VilleController extends AbstractController
         if($villeForm->isSubmitted() && $villeForm->isValid()){
             $entityManager->persist($ville);
             $entityManager->flush();
-            $this->addFlash('succes', 'ville crée !');
+            $this->addFlash('success', 'ville crée !');
             return $this->redirectToRoute('ville_liste');
         }
         
@@ -55,7 +55,7 @@ class VilleController extends AbstractController
         if($villeForm->isSubmitted() && $villeForm->isValid()){
             $entityManager->persist($ville);
             $entityManager->flush();
-            $this->addFlash('succes', 'ville modifier !');
+            $this->addFlash('success', 'ville modifier !');
             return $this->redirectToRoute('ville_liste');
         }
         
@@ -78,10 +78,10 @@ class VilleController extends AbstractController
         if($trouver==false){
             $entityManager->remove($ville);
             $entityManager->flush();
-            $this->addFlash('succes', 'ville supprimer !');
+            $this->addFlash('success', 'ville supprimer !');
         }
         else{
-            $this->addFlash('error', 'la ville ne peut pas être supprimer !');
+            $this->addFlash('danger', 'la ville ne peut pas être supprimer !');
         }
        
         return $this->redirectToRoute("ville_liste");
