@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="text-center mt-2 mb-4">Gestion des utilisateurs</h1>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Pseudo</th>
+            <th>Email</th>
+            <th>Telephone</th>
+            <th>Administration</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for user in users %}
+            <tr>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.telephone }}</td>
+                <td>
+                    <a class="text-decoration-none fw-bold text-dark link-primary me-2" href="{{ path('user_enable_disable', {'idUser': user.id}) }}">
+                        {% if user.actif %}
+                            Désactiver
+                        {% else %}
+                            Activer
+                        {% endif %}
+                    </a>
+                    -
+                    <a class="text-decoration-none fw-bold text-dark link-primary ms-2" href="{{ path('user_delete', {'idUser': user.id}) }}">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

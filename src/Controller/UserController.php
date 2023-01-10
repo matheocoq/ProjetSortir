@@ -201,6 +201,61 @@ class UserController extends AbstractController
             'Importform' => $form->createView(),
         ]);
     }
+    #[Route('/user/liste', name: 'user_list')]
+    public function userList(Request $request, UserRepository $userRepository) {
+        $users = $userRepository->findAll();
+        return $this->render('user/userList.html.twig', [
+            'users' => $users
+        ]);
+    }
+
+    #[Route('/user/Enable-Disable/{idUser}', name: 'user_enable_disable')]
+    public function userEnableDisable($idUser, Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager) {
+        $user = $userRepository->find($idUser);
+        if (!$user) {
+            return $this->redirectToRoute('user_list');
+        }
+
+        if ($user->isActif()){
+            $user->setActif(false);
+        } else {
+            $user->setActif(true);
+        }
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('user_list');
+    }
+
+    #[Route('/user/Delete/{idUser}', name: 'user_delete')]
+    public function userDelete($idUser, Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager) {
+        $user = $userRepository->find($idUser);
+
+        if (!$user) {
+            return $this->redirectToRoute('user_list');
+        }
+
+        $sortiesUser = $user->getOrganisations();
+        $participationsUser = $user->getInscriptions();
+
+        foreach ($sortiesUser as $sortie){
+            $inscriptions = $sortie->getInscriptions();
+            foreach ($inscriptions as $inscription) {
+                $entityManager->remove($inscription);
+            }
+            $entityManager->remove($sortie);
+        }
+
+        foreach ($participationsUser as $inscription) {
+            $entityManager->remove($inscription);
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('user_list');
+    }
 
     /**
      * @return string
