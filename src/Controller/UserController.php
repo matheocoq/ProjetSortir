@@ -236,6 +236,21 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_list');
         }
 
+        $sortiesUser = $user->getOrganisations();
+        $participationsUser = $user->getInscriptions();
+
+        foreach ($sortiesUser as $sortie){
+            $inscriptions = $sortie->getInscriptions();
+            foreach ($inscriptions as $inscription) {
+                $entityManager->remove($inscription);
+            }
+            $entityManager->remove($sortie);
+        }
+
+        foreach ($participationsUser as $inscription) {
+            $entityManager->remove($inscription);
+        }
+
         $entityManager->remove($user);
         $entityManager->flush();
 
