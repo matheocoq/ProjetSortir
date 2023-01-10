@@ -64,9 +64,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $user = $this->findOneBy(['email' => $username]);
         }
 
-        if (!$user) {
-            throw new \Exception("impossible de trouver l'utilisateur");
-        }
+
 
         return $user;
     }

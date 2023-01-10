@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Liste des lieux
+{% endblock %}
+
+{% block body %}
+
+<div class="div-liste-lieux">
+<table class="table margin-30 tableau-liste-lieux">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Ville</th>
+            <th scope="col">Code Postal</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for lieu in lieux %}
+         <tr>
+            <td>{{ lieu.nom}}</td>
+            <td>{{ lieu.ville.nom}}</td>
+            <td>{{ lieu.ville.codePostal|date("Y-m-d H:i:s")}}</td>
+            <td>
+                <a class="text-decoration-none fw-bold link-primary margin-right" href="{{ path('lieux_update', {id: lieu.id}) }}">Modifier</a>
+                <a class="text-decoration-none fw-bold link-primary" href="{{ path('lieux_delete', { 'id': lieu.id }) }}">Supprimer</a>     
+            </td>
+        </tr>
+    {% endfor %}  
+    </tbody>
+</table>
+</div>
+<a class="btn btn-primary bouton-cree-lieux" href="{{ path('lieux_create')}}">Ajouter</a>
+{% endblock %}

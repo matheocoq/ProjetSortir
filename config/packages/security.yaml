@@ -41,6 +41,11 @@ security:
     access_control:
         - { path: ^/sortie, roles: ROLE_USER }
         - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/lieux, roles: ROLE_ADMIN }
+        - { path: ^/site, roles: ROLE_ADMIN }
+        - { path: ^/ville, roles: ROLE_ADMIN }
+        - { path: ^/user/create, roles: ROLE_ADMIN }
+        - { path: ^/user/upload, roles: ROLE_ADMIN }
       
 
 when@test:

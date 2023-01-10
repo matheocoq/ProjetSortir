@@ -70,13 +70,35 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/create', name: 'user_create')]
-    public function create(Request $request,UserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager,UserRepository $userRepository): Response {
+    public function create(Request $request,UserPasswordHasherInterface $userPasswordHasher,EntityManagerInterface $entityManager,UserRepository $userRepository,SluggerInterface $slugger): Response {
 
         $user = new User();
         $userForm = $this->createForm(UserCreateType::class, $user);
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid()){
+            $image = $userForm->get('image')->getData();
+            if ($image) {
+                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $user->getPseudo().'-'.uniqid().'.'.$image->guessExtension();
+
+                if ($user->getImage()!= null) {
+                    unlink($this->getParameter('image_directory').'/'.$user->getImage());
+                }
+                // Move the file to the directory where brochures are stored
+                try {
+                    $image->move(
+                        $this->getParameter('image_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                $user->setImage($newFilename);
+            }
             if($userForm->get('password')->getData() != null) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -87,6 +109,7 @@ class UserController extends AbstractController
             }
             $entityManager->persist($user);
             $entityManager->flush();
+            $this->addFlash('succes', 'Utilistauer crée !');
             return $this->redirectToRoute('user_create');
         }
 
