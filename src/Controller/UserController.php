@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\ResetPasswordRequest;
+use App\Repository\ResetPasswordRequestRepository;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use App\Entity\User;
 use App\Form\ImportUsersType;
@@ -246,7 +248,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/Delete/{idUser}', name: 'user_delete')]
-    public function userDelete($idUser, Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager) {
+    public function userDelete($idUser, Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, ResetPasswordRequestRepository $resetPasswordRequestRepository) {
         $user = $userRepository->find($idUser);
 
         if (!$user) {
@@ -255,6 +257,13 @@ class UserController extends AbstractController
 
         $sortiesUser = $user->getOrganisations();
         $participationsUser = $user->getInscriptions();
+        $resetPassUser = $resetPasswordRequestRepository->findBy([
+           'user' => $user
+        ]);
+
+        foreach ($resetPassUser as $unResetPassUser) {
+            $entityManager->remove($unResetPassUser);
+        }
 
         foreach ($sortiesUser as $sortie){
             $inscriptions = $sortie->getInscriptions();
