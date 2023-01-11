@@ -112,7 +112,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Sortie added !');
+            $this->addFlash('success', 'Sortie ajouter !');
             return $this->redirectToRoute('sortie_liste');
         }
 
@@ -141,7 +141,7 @@ class SortieController extends AbstractController
             if ($request->request->get('typeRegister') === 'Enregistrer') {
                 $sortie->setEtat($etatsRepository->find(1));
                 $entityManager->persist($sortie);
-                $messageSucces = 'Sortie updated !';
+                $messageSucces = 'Sortie modifier !';
             }
         
             $entityManager->flush();
@@ -209,7 +209,7 @@ class SortieController extends AbstractController
             }
         }
         else{
-            $messageSucces = 'erreur inscription';
+            $messageSucces = 'erreur d\'inscription';
         }
         $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
@@ -243,7 +243,7 @@ class SortieController extends AbstractController
             $sortie->setEtat($etat);
             $entityManager->persist($sortie);
             $entityManager->flush();
-            $messageSucces = 'Sortie publied !';
+            $messageSucces = 'Sortie publier !';
         }
         $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
@@ -257,7 +257,7 @@ class SortieController extends AbstractController
         if( $sortie->getEtat()->getId() == 1 && $sortie->getOrganisateur()->getId() == $user->getId()){
             $entityManager->remove($sortie);
             $entityManager->flush();
-            $messageSucces = 'Sortie deleted !';
+            $messageSucces = 'Sortie supprimer !';
         }
         $this->addFlash('success', $messageSucces);
         return $this->redirectToRoute("sortie_liste");
@@ -278,7 +278,7 @@ class SortieController extends AbstractController
                 $sortie->setDescription($request->get("motif"));
                 $entityManager->persist($sortie);
                 $entityManager->flush();
-                $messageSucces = 'Sortie annuled !';
+                $messageSucces = 'Sortie annuler !';
                 $this->addFlash('success', $messageSucces);
             }
 

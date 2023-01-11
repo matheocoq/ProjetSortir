@@ -48,7 +48,6 @@ class SitesRepository extends ServiceEntityRepository
         ->getQuery()
         ->getOneOrNullResult()
         ;
-        dump($test);
         return $test;
     }
 

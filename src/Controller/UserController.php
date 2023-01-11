@@ -112,7 +112,7 @@ class UserController extends AbstractController
             }
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('success', 'Utilistauer crée !');
+            $this->addFlash('success', 'Utilisateur crée !');
             return $this->redirectToRoute('user_create');
         }
 
@@ -158,14 +158,14 @@ class UserController extends AbstractController
 
             // Read the CSV file and do something with the data
             $csv = array_map(function($v){return str_getcsv($v, ";");}, file('upload'.'/'.$fileName));
-            dump($csv);
+            
             foreach ($csv as &$ligne) {
                 try {
                     if ($i == 0) {
                         $i++;
                         continue;
                     }
-                    dump($ligne);
+                    
                     $separer = $ligne;
                     if (count($separer) != 7) {
                         $i++;
@@ -174,10 +174,8 @@ class UserController extends AbstractController
                     }
                     $user = $userRepository->findOneBy(array('pseudo' => $separer[4]));
                     if ($user == null) {
-                        dump('Aucun user trouver avec ce pseudo, on en créer un nouveau');
                         $user = new User();
                     }
-                    dump($user);
                     if (!filter_var($separer[0], FILTER_VALIDATE_EMAIL)) {
                         $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Le format de l'email n'est pas bon.";
                         $i++;
@@ -199,7 +197,7 @@ class UserController extends AbstractController
                         continue;
                     }
                     $user->setTelephone($separer[5]);
-                    dump($separer[6]);
+                    
                     $siteObj = $sitesRepository->findByName($separer[6]);
 
                     $user->setSites($siteObj);
@@ -212,7 +210,7 @@ class UserController extends AbstractController
                 }
             }
         }
-        dump($arrayOfErrrors);
+        
         foreach ($arrayOfErrrors as &$errror) {
             $this->addFlash("danger", $errror);
         }
