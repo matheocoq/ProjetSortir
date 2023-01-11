@@ -9,8 +9,8 @@ class Fetch {
 
 
 const init = async () => {
-    const res = await Fetch.get('/api/lieux')
     const sorties_lieux = document.getElementById('sorties_lieux');
+    const idLieuxBase = sorties_lieux.value ? parseInt(sorties_lieux.value) : 1
     const villeIn = document.getElementById('ville');
     const rueIn = document.getElementById('rue');
     const cpIn = document.getElementById('cp');
@@ -18,7 +18,7 @@ const init = async () => {
     const longitudeIn = document.getElementById('longitude');
 
     const handleChange = (e) => {
-        const idLieuxSelected = e ? parseInt(e.target.value) : 1
+        const idLieuxSelected = parseInt(e.target.value)
         res.forEach(el => {
             if (el.idLieux === idLieuxSelected) {
                 villeIn.value = el.nomVille
@@ -30,7 +30,7 @@ const init = async () => {
         })
     }
 
-    handleChange()
+    handleChange({target: {value: idLieuxBase}})
 
     sorties_lieux.addEventListener('change', handleChange)
 }
