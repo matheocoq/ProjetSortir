@@ -189,3 +189,8 @@
 .margin-right{
     margin-right: 10px ;
 }
+
+.image-logo{
+    width: 75px;
+    max-height: 75px;
+}
