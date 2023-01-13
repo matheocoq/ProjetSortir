@@ -140,8 +140,6 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(ImportUsersType::class);
         $form->handleRequest($request);
-        $emailConstraint = new EmailConstraint();
-        $emailConstraint->message = 'Your customized error message';
 
         $arrayOfErrrors = [];
         $i =0;
@@ -161,21 +159,25 @@ class UserController extends AbstractController
             
             foreach ($csv as &$ligne) {
                 try {
+                    //La 1ère ligne correspond à l'entète
                     if ($i == 0) {
                         $i++;
                         continue;
                     }
                     
                     $separer = $ligne;
+                    //Si le nombre de colonne est différent de 7 alors il y a un problème dans les données fournis pour cette ligne
                     if (count($separer) != 7) {
                         $i++;
                         $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Veuillez vérifier les informations de l'utilisateur.";
                         continue;
                     }
                     $user = $userRepository->findOneBy(array('pseudo' => $separer[4]));
+                    //On verifie si le user existe déja par son pseudo si oui alors on fait un update du User autrement on le créer
                     if ($user == null) {
                         $user = new User();
                     }
+                    //Vérification format Email
                     if (!filter_var($separer[0], FILTER_VALIDATE_EMAIL)) {
                         $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Le format de l'email n'est pas bon.";
                         $i++;
@@ -191,6 +193,7 @@ class UserController extends AbstractController
                     $user->setNom($separer[2]);
                     $user->setPrenom($separer[3]);
                     $user->setPseudo($separer[4]);
+                    //Vérification format téléphone
                     if(!preg_match('/^[0-9]{10}+$/', $separer[5])) {
                         $arrayOfErrrors[] = "Erreur lors de la tentative de création de l'utilisateur à la ligne " . $i . " . Le format du numéro de téléphone n'est pas bon.";
                         $i++;
@@ -210,7 +213,7 @@ class UserController extends AbstractController
                 }
             }
         }
-        
+        //Afficahge de la liste des erreurs présent dans le fichier par un bandeau flash
         foreach ($arrayOfErrrors as &$errror) {
             $this->addFlash("danger", $errror);
         }
