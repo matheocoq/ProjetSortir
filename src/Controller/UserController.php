@@ -80,7 +80,10 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid()){
+
+            //récupération du champ image du formulaire
             $image = $userForm->get('image')->getData();
+
             if ($image) {
                 $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
