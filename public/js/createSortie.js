@@ -9,6 +9,7 @@ class Fetch {
 
 
 const init = async () => {
+    const res = await Fetch.get('http://10.14.200.8:8000/api/lieux')
     const sorties_lieux = document.getElementById('sorties_lieux');
     const idLieuxBase = sorties_lieux.value ? parseInt(sorties_lieux.value) : 1
     const villeIn = document.getElementById('ville');
