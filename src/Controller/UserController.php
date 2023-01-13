@@ -13,6 +13,7 @@ use App\Repository\SitesRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Id;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -33,27 +34,31 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted()){
+            //récupération du champ image du formulaire
             $image = $userForm->get('image')->getData();
+            
+            // regarder si une image est présente 
             if ($image) {
-                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
+                
                 $newFilename = $user->getPseudo().'-'.uniqid().'.'.$image->guessExtension();
 
+                //supprimer l'image si l'utilsateur en à déjà une
                 if ($user->getImage()!= null) {
                     unlink($this->getParameter('image_directory').'/'.$user->getImage());
                 }
-                // Move the file to the directory where brochures are stored
+                
                 try {
+                    //deplace l'image dans le fichier 
                     $image->move(
                         $this->getParameter('image_directory'),
                         $newFilename
                     );
+                    $user->setImage($newFilename);
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    throw new Exception("Problème pour déplacer l'image");
                 }
 
-                $user->setImage($newFilename);
+                
             }
             if($userForm->get('password')->getData() != null) {
                 $user->setPassword(
@@ -84,26 +89,28 @@ class UserController extends AbstractController
             //récupération du champ image du formulaire
             $image = $userForm->get('image')->getData();
 
+            // regarder si une image est présente 
             if ($image) {
-                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
+
                 $newFilename = $user->getPseudo().'-'.uniqid().'.'.$image->guessExtension();
 
+                //supprimer l'image si l'utilsateur en à déjà une
                 if ($user->getImage()!= null) {
                     unlink($this->getParameter('image_directory').'/'.$user->getImage());
                 }
-                // Move the file to the directory where brochures are stored
+                
+
                 try {
+                    //deplace l'image dans le fichier 
                     $image->move(
                         $this->getParameter('image_directory'),
                         $newFilename
                     );
+                    $user->setImage($newFilename);
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    throw new Exception("Problème pour déplacer l'image");
                 }
-
-                $user->setImage($newFilename);
+  
             }
             if($userForm->get('password')->getData() != null) {
                 $user->setPassword(
